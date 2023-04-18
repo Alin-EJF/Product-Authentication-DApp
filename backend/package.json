@@ -4,7 +4,8 @@
     "build": "npm run clean && tsc",
     "start": "node src",
     "local": "ts-node src",
-    "local:watch": "nodemon src -e ts,json --exec \"npm run local\""
+    "local:watch": "nodemon src -e ts,json --exec \"npm run local\"",
+    "test": "jest --config=test/jest.config.js --detectOpenHandles"
   },
   "dependencies": {
     "express": "^4.18.2",
