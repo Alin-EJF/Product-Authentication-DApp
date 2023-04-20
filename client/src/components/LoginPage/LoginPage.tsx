@@ -13,13 +13,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="app">
-      <header className="header">
-        <Link to="/" className="logo">
-          Logo
-        </Link>
-        <button className="login-button">Login</button>
-      </header>
+    <div>
       <div className="content-container">
         <h1 className="main-header">Login or Register</h1>
         <form onSubmit={handleSubmit} className={styles.form_container}>

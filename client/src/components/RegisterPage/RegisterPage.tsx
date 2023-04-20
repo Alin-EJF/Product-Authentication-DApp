@@ -18,15 +18,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="app">
-      <header className="header">
-        <Link to="/" className="logo">
-          Logo
-        </Link>
-        <Link to="/login" className="login-button">
-          Login
-        </Link>
-      </header>
+    <div>
       <div className="content-container">
         <h1 className="main-header">Register</h1>
         <form onSubmit={handleSubmit} className={styles.form_container}>

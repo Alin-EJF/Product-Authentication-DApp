@@ -1,6 +1,5 @@
 import supertest from "supertest";
 import { server } from "./index";
-import { describe, afterAll, it, expect } from "@jest/globals";
 
 describe("Server", function () {
   const request = supertest.agent(server);
