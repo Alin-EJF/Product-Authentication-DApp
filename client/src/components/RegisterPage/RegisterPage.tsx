@@ -1,20 +1,27 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./RegisterPage.module.css";
+import axios from "axios";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
-    // Perform registration logic here
+    axios.get('http://localhost:3000/test')
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.error(error);
+  });
     console.log("Email:", email, "Password:", password);
   };
 
