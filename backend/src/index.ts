@@ -1,14 +1,11 @@
-import http from "http";
+import express, { Request, Response } from 'express';
 
-export const server = http.createServer((req, res) => {
-  res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(
-    JSON.stringify({
-      data: "It Works yeee!",
-    })
-  );
+const app = express();
+
+app.get('/test', (req: Request, res: Response) => {
+  res.json('test ook');
 });
 
-server.listen(3000, () => {
-  console.log("Server running on http://localhost:3000/");
+app.listen(3000, () => {
+  console.log('Server listening on port 3000');
 });
