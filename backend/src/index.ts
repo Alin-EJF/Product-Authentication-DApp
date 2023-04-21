@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import cors, { CorsOptions } from 'cors';
 import { pool } from './db';
+import authRoutes from './routes/authRoutes';
 
 const app = express();
 
@@ -18,6 +19,9 @@ const corsOptions: CorsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(express.json());
+
+app.use('/auth', authRoutes);
 
 app.get('/test', (req: Request, res: Response) => {
   res.json('test ook');
@@ -29,8 +33,6 @@ app.listen(3000, () => {
 
 
 
-
-
 // Check the database connection
 pool.connect((err, client, release) => {
   if (err) {
@@ -38,11 +40,11 @@ pool.connect((err, client, release) => {
   }
   console.log('Connected to PostgreSQL database!');
 
-  client.query('SELECT * from users', (err, result) => {
+  client.query('SELECT * from users;', (err, result) => {
     release();
     if (err) {
       return console.error('Error executing query', err.stack);
     }
-    console.log('from db:', result.rows[0]);
+    console.log('from db:', result.rows);
   });
 });

@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./RegisterPage.module.css";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,18 +17,30 @@ export default function RegisterPage() {
       alert("Passwords do not match!");
       return;
     }
-    axios.get('/test')
-  .then(response => {
-    console.log(response.data);
-  })
-  .catch(error => {
-    console.error(error);
-  });
+
+    axios
+      .post("/auth/register", {
+        email: email,
+        password: password,
+      })
+      .then((response) => {
+        console.log(response.data);
+        toast.success("Registration successful! You can now login."); //more checks maybe not succeeded ?
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500); // Delay 1.5s
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("Registration failed. Please try again."); //add error in popup ?
+      });
+
     console.log("Email:", email, "Password:", password);
   };
 
   return (
     <div>
+      <ToastContainer />
       <div className="content-container">
         <h1 className="main-header">Register</h1>
         <form onSubmit={handleSubmit} className={styles.form_container}>

@@ -1,19 +1,43 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./LoginPage.module.css";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Perform authentication logic here
+
+    axios
+      .post("/auth/login", {
+        email: email,
+        password: password,
+      })
+      .then((response) => {
+        console.log(response.data);
+        // Redirect user to the desired page after successful login
+        toast.success("Login succeded.");
+          
+      setTimeout(() => {
+        navigate("/");
+      }, 1500); // Delay 1.5s
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("Login failed. Please check your email and password.");
+      });
+
     console.log("Email:", email, "Password:", password);
   };
 
   return (
     <div>
+      <ToastContainer />
       <div className="content-container">
         <h1 className="main-header">Login or Register</h1>
         <form onSubmit={handleSubmit} className={styles.form_container}>

@@ -8,12 +8,14 @@
     "test": "jest --config=test/jest.config.js --detectOpenHandles"
   },
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "global": "^4.4.0",
     "pg": "^8.10.0",
     "postgres": "^3.3.4"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.13",
     "@types/node": "^18.15.11",
     "@types/pg": "^8.6.6",
