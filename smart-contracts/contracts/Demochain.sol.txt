@@ -1,0 +1,427 @@
+pragma solidity >=0.4.22 <0.7.0;
+
+contract Demochain {
+
+    /*
+        Data structures used in voting process.
+    */
+
+    struct Admin {
+        string uniqueIdentifier;
+        string name;
+        bool isActive;
+        uint permissions;
+        bool exist;
+    }
+
+    struct Option {
+        string uniqueIdentifier;
+        string name;
+        string party;
+        uint voteCount;
+        string description;
+        string imageUrl;
+    }
+
+    struct Voter {
+        address _address;
+        uint weight;
+        bool voted;
+        uint votedOption;
+        uint voterDetailsId;
+        bool exist;
+    }
+
+    struct VoterDetails {
+        uint id;
+        string uniqueIdentifier;
+        string resourceUrl;
+        string name;
+    }
+
+    /*
+        Interaction with the system.
+    */
+    mapping(address => Voter) public votersMapped;
+    mapping(uint => VoterDetails) public voterDetailsMapped;
+    Voter[] public voters;
+
+    Option[] public optionList;
+    string[] public logs;
+
+    Admin[] public admins;
+    mapping(address => Admin) public adminsMapped;
+    uint public adminCount;
+
+
+    /*
+        Logical parameters.
+    */
+
+    bool public voteHasStarted;
+    bool public voteHasEnded;
+    uint public totalVotes;
+
+    uint private resetCount;
+
+    /*
+        Modifiers.
+    */
+
+    modifier minModerator {
+        require(
+            adminsMapped[msg.sender].permissions >= 1 && adminsMapped[msg.sender].isActive == true,
+            "Only a system Moderator can perform this action."
+        );
+        _;
+    }
+
+    modifier minOwner {
+        require(adminsMapped[msg.sender].permissions == 2,
+            "Only a system Owner can perform this action.");
+        _;
+    }
+
+    modifier votingDidStarted {
+        require(voteHasStarted == true,
+            "This action cannot be performed. Voting has not started yet.");
+        _;
+    }
+
+    modifier votingDidNotStarted {
+        require(voteHasStarted == false,
+            "This action cannot be performed. Voting has already started.");
+        _;
+    }
+
+    modifier votingDidEnded {
+        require(voteHasEnded == true,
+            "This action cannot be performed. Voting has not ended yet.");
+        _;
+    }
+
+    modifier votingDidNotEnded {
+        require(voteHasEnded == false,
+            "This action cannot be performed. Voting has ended.");
+        _;
+    }
+
+
+    /*
+       Methods.
+   */
+
+    constructor(string memory _name) public {
+        adminCount = 1;
+        resetCount = 0;
+
+        Admin memory owner = Admin({
+        uniqueIdentifier : toString(adminCount),
+        name : _name,
+        isActive : true,
+        permissions : 2,
+        exist : true
+        });
+
+        adminsMapped[msg.sender] = owner;
+        admins.push(owner);
+
+        voteHasStarted = false;
+        voteHasEnded = false;
+        totalVotes = 0;
+        logs.push(string(abi.encodePacked("Contract was created by ", _name)));
+    }
+
+    function startVoting() external minOwner votingDidNotStarted votingDidNotEnded returns (string memory) {
+        require(optionList.length > 1, "Voting process cannot be started with less than two voting options.");
+        voteHasStarted = true;
+        logs.push(string(abi.encodePacked("Voting process was started by the owner. ")));
+        return "Voting started successfully";
+    }
+
+    function endVoting() external minOwner votingDidStarted votingDidNotEnded {
+        voteHasEnded = true;
+        logs.push(string(abi.encodePacked("Voting process was ended by the owner. ")));
+    }
+
+//    function addAdmin(address _address) external minOwner {
+//        require(votersMapped[_address].voterDetailsId != 0, "User is not registered.");
+//        require(adminsMapped[_address].permissions != 0, "Admin is already registered.");
+//
+//        adminCount = adminCount + 1;
+//        string memory name = voterDetailsMapped[votersMapped[_address].voterDetailsId].name;
+//        Admin memory admin = Admin({
+//        uniqueIdentifier : toString(adminCount),
+//        name : name,
+//        isActive : true,
+//        permissions : 1,
+//        exist : true
+//        });
+//        adminsMapped[_address] = admin;
+//        logs.push(string(abi.encodePacked("Owner added a new admin with uniqueIdentifier: ", toString(adminCount))));
+//    }
+
+    event AdminId(uint internalId);
+
+    function addAdmin(uint id) external minOwner {
+        Voter memory voter = voters[id];
+        require(voter.voterDetailsId != 0, "User is not registered.");
+        require(adminsMapped[voter._address].permissions == 0, "Admin is already registered.");
+
+        string memory name = voterDetailsMapped[voter.voterDetailsId].name;
+        Admin memory admin = Admin({
+        uniqueIdentifier : toString(adminCount),
+        name : name,
+        isActive : true,
+        permissions : 1,
+        exist : true
+        });
+        adminsMapped[voter._address] = admin;
+        admins.push(admin);
+        emit AdminId(adminCount);
+        adminCount = adminCount + 1;
+        logs.push(string(abi.encodePacked("Owner added a new admin with uniqueIdentifier: ", toString(adminCount))));
+    }
+
+//    function enableAdmin(address _address) external minOwner {
+//        require(_address != msg.sender, "Owner of the contract is always enabled.");
+//        require(adminsMapped[_address].exist, "Admin does not exist.");
+//        require(adminsMapped[_address].permissions == 0, "Admin is already enabled.");
+//
+//        adminsMapped[_address].isActive = false;
+//        logs.push(string(abi.encodePacked("Owner disabled admin with uniqueIdentifier: ", adminsMapped[_address].uniqueIdentifier)));
+//    }
+
+    function enableAdmin(uint id) external minOwner {
+        Voter memory voter = voters[id];
+        require(voter._address != msg.sender, "Owner of the contract is always enabled.");
+        require(adminsMapped[voter._address].exist, "Admin does not exist.");
+        require(adminsMapped[voter._address].permissions == 0, "Admin is already enabled.");
+
+        adminsMapped[voter._address].isActive = false;
+        admins[id].isActive = false;
+        logs.push(string(abi.encodePacked("Owner disabled admin with uniqueIdentifier: ", adminsMapped[voter._address].uniqueIdentifier)));
+    }
+
+//    function disableAdmin(address _address) external minOwner {
+//        require(_address != msg.sender, "Owner of the contract cannot be disabled.");
+//        require(adminsMapped[_address].exist, "Admin does not exist.");
+//        require(adminsMapped[_address].permissions == 1, "Admin is not enabled yet.");
+//        adminsMapped[_address].isActive = false;
+//        logs.push(string(abi.encodePacked("Owner disabled admin with uniqueIdentifier: ", adminsMapped[_address].uniqueIdentifier)));
+//    }
+
+    function disableAdmin(uint id) external minOwner {
+        Voter memory voter = voters[id];
+        require(voter._address != msg.sender, "Owner of the contract cannot be disabled.");
+        require(adminsMapped[voter._address].exist, "Admin does not exist.");
+        require(adminsMapped[voter._address].permissions == 1, "Admin is not enabled yet.");
+        adminsMapped[voter._address].isActive = false;
+        admins[id].isActive = false;
+        logs.push(string(abi.encodePacked("Owner disabled admin with uniqueIdentifier: ", adminsMapped[voter._address].uniqueIdentifier)));
+    }
+
+    event OptionAdded(uint internalId);
+
+    function addVoteOption(string calldata _uniqueIdentifier, string calldata _name, string calldata _party,
+        string calldata _description, string calldata _imageUrl) external minOwner votingDidNotStarted {
+        for (uint i = 0; i < optionList.length; i++) {
+            require(compareStrings(optionList[i].uniqueIdentifier, _uniqueIdentifier) == false, "Voting option already exist.");
+        }
+
+        Option memory newOption = Option({
+        uniqueIdentifier : _uniqueIdentifier,
+        name : _name,
+        party : _party,
+        description : _description,
+        imageUrl : _imageUrl,
+        voteCount : 0
+        });
+        optionList.push(newOption);
+
+        logs.push(string(abi.encodePacked("Owner added a new voting option with uniqueIdentifier: ", _uniqueIdentifier, ", named ", _name, " being part of ", _party, " party.")));
+        emit OptionAdded(optionList.length - 1);
+    }
+
+    function removeVoteOption(string calldata _uniqueIdentifier) external minOwner votingDidNotStarted {
+        int index = - 1;
+        for (uint i = 0; i < optionList.length; i++) {
+            if (compareStrings(optionList[i].uniqueIdentifier, _uniqueIdentifier)) {
+                index = int(i);
+                break;
+            }
+        }
+        require(index >= 0, "Voting option does not exist.");
+
+        for (uint i = uint(index); i < optionList.length - 1; i++){
+            optionList[i] = optionList[i+1];
+        }
+        optionList.length--;
+        logs.push(string(abi.encodePacked("Owner removed the voting option with uniqueIdentifier: ", _uniqueIdentifier)));
+    }
+
+    event VotingAdded(uint internalId, address _address);
+
+    function registerToVote(string calldata _uniqueIdentifier, string calldata _resourceUrl, string calldata _name) external votingDidStarted {
+        for (uint i = 0; i < voters.length; i++) {
+            if (compareStrings(voterDetailsMapped[voters[i].voterDetailsId].uniqueIdentifier, _uniqueIdentifier)) {
+                emit VotingAdded(i, voters[i]._address);
+                return;
+            }
+        }
+
+        if (votersMapped[msg.sender].exist) {
+            emit VotingAdded(votersMapped[msg.sender].voterDetailsId, msg.sender);
+            return;
+        }
+
+        VoterDetails memory voterDetails = VoterDetails({
+        id : voters.length,
+        uniqueIdentifier : _uniqueIdentifier,
+        resourceUrl: _resourceUrl,
+        name : _name
+        });
+
+        Voter memory voter = Voter({
+        _address : msg.sender,
+        weight : 0,
+        voted : false,
+        votedOption : 0,
+        voterDetailsId : voters.length,
+        exist : true
+        });
+
+        voterDetailsMapped[voters.length] = voterDetails;
+        voters.push(voter);
+        votersMapped[msg.sender] = voter;
+        logs.push(string(abi.encodePacked("User with id ", toString(voterDetails.id), " registered to vote.")));
+        emit VotingAdded(voters.length - 1, msg.sender);
+    }
+
+    function getUserDetails(uint id) minModerator votingDidStarted external view returns (uint, uint, string memory, string memory, string memory, bool, bool)  {
+        Voter memory voter = voters[id];
+        require(voter.exist, "Voter does not exist.");
+        VoterDetails memory voterDetails = voterDetailsMapped[voter.voterDetailsId];
+        return (id, voter.weight, voterDetails.uniqueIdentifier, voterDetails.resourceUrl, voterDetails.name, voter.voted, adminsMapped[voter._address].permissions > 0);
+    }
+
+    function giveRightToVote(uint id) external minModerator votingDidStarted {
+        Voter memory voter = voters[id];
+        require(voter.exist, "Voter does not exist.");
+        require(!voter.voted, "The voter already voted.");
+        require(voter.weight == 0);
+        voters[id].weight = 1;
+        votersMapped[voter._address].weight = 1;
+        logs.push(string(abi.encodePacked("Admin with uniqueIdentifier ", adminsMapped[msg.sender].uniqueIdentifier, " offered voting rights to voter with id ", toString(voter.voterDetailsId))));
+    }
+
+    function vote(uint option) external votingDidStarted votingDidNotEnded {
+        Voter storage sender = votersMapped[msg.sender];
+        require(sender.exist, "You are not registered.");
+        require(sender.weight != 0, "Has no right to vote.");
+        require(!sender.voted, "Already voted.");
+        votersMapped[msg.sender].voted = true;
+        votersMapped[msg.sender].votedOption = option;
+        voters[votersMapped[msg.sender].voterDetailsId].voted = true;
+        voters[votersMapped[msg.sender].voterDetailsId].votedOption = option;
+        optionList[option].voteCount += 1;
+        totalVotes += 1;
+        logs.push(string(abi.encodePacked("User with id ", toString(sender.voterDetailsId), " voted.")));
+    }
+
+    function optionsCount() external view returns (uint) {
+        return optionList.length;
+    }
+
+    function getOption(uint index) external view returns (uint, string memory, string memory, string memory, string memory, string memory) {
+        Option memory option = optionList[index];
+        return (index, option.uniqueIdentifier, option.name, option.party, option.description, option.imageUrl);
+    }
+
+    function adminsCount() external view returns (uint) {
+        return admins.length;
+    }
+
+    function getAdmin(uint index) external view returns (uint, string memory, string memory, bool, uint, bool) {
+        Admin memory admin = admins[index];
+        return (index, admin.uniqueIdentifier, admin.name, admin.isActive, admin.permissions, admin.exist);
+    }
+
+    function getFullOption(uint index) external votingDidStarted votingDidEnded view returns (uint, string memory, string memory, string memory, uint, string memory, string memory) {
+        Option memory option = optionList[index];
+        return (index, option.uniqueIdentifier, option.name, option.party, option.voteCount, option.description, option.imageUrl);
+    }
+
+    function votersCount() external view returns (uint) {
+        return voters.length;
+    }
+
+    function logsCount() external view returns (uint) {
+        return logs.length;
+    }
+
+    function reset() external minOwner votingDidStarted votingDidEnded returns (string memory) {
+        resetCount = resetCount + 1;
+        if (resetCount != 3) {
+            return string(abi.encodePacked("In order the protect the voting process you must call this method three times. You already called it ", toString(resetCount), " times."));
+        }
+
+        uint votersLen = voters.length;
+        for (uint i = 0; i < votersLen; i++) {
+            delete votersMapped[voters[i]._address];
+            delete voterDetailsMapped[voters[i].voterDetailsId];
+//            if (adminsMapped[voters[i]._address].exist && voters[i]._address != ) {
+//                adminsMapped[voters[i]._address] = emptyAdmin;
+//            }
+            delete voters[i];
+        }
+
+        voteHasStarted = false;
+        voteHasEnded = false;
+        totalVotes = 0;
+        adminCount = 1;
+        resetCount = 0;
+        voters.length = 0;
+        optionList.length = 0;
+        admins.length = 0;
+        logs.length = 0;
+
+        return "Resetting the contract was successful.";
+    }
+
+    function toString(uint data) internal pure returns (string memory str) {
+        if (data == 0) {
+            return "0";
+        }
+        uint256 j = data;
+        uint256 length;
+        while (j != 0) {
+            length++;
+            j /= 10;
+        }
+        bytes memory byteString = new bytes(length);
+        uint256 k = length;
+        j = data;
+        while (j != 0) {
+            byteString[--k] = bytes1(uint8(48 + j % 10));
+            j /= 10;
+        }
+        str = string(byteString);
+    }
+
+    function toString(bytes memory data) internal pure returns (string memory) {
+        bytes memory alphabet = "0123456789abcdef";
+        bytes memory str = new bytes(2 + data.length * 2);
+        str[0] = "0";
+        str[1] = "x";
+        for (uint i = 0; i < data.length; i++) {
+            str[2 + i * 2] = alphabet[uint(uint8(data[i] >> 4))];
+            str[3 + i * 2] = alphabet[uint(uint8(data[i] & 0x0f))];
+        }
+        return string(str);
+    }
+
+    function compareStrings(string memory a, string memory b) private pure returns (bool) {
+        return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
+    }
+}

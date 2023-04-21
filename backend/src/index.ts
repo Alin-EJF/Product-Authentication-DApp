@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import cors, { CorsOptions } from 'cors';
+import { pool } from './db';
 
 const app = express();
 
@@ -24,4 +25,24 @@ app.get('/test', (req: Request, res: Response) => {
 
 app.listen(3000, () => {
   console.log('Server listening on port 3000');
+});
+
+
+
+
+
+// Check the database connection
+pool.connect((err, client, release) => {
+  if (err) {
+    return console.error('Error acquiring client', err.stack);
+  }
+  console.log('Connected to PostgreSQL database!');
+
+  client.query('SELECT * from users', (err, result) => {
+    release();
+    if (err) {
+      return console.error('Error executing query', err.stack);
+    }
+    console.log('from db:', result.rows[0]);
+  });
 });

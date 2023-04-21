@@ -15,7 +15,7 @@ export default function RegisterPage() {
       alert("Passwords do not match!");
       return;
     }
-    axios.get('http://localhost:3000/test')
+    axios.get('/test')
   .then(response => {
     console.log(response.data);
   })
