@@ -1,3 +1,7 @@
+/*This contract is responsible for managing the registration of products,
+ including their unique identifiers, descriptions, and other relevant information.
+*/
+
 pragma solidity ^0.8.0;
 
 contract ProductRegistry {
@@ -27,3 +31,22 @@ contract ProductRegistry {
         return products[id];
     }
 }
+
+/*
+contract ProductRegistration {
+    struct Product {
+        uint256 id;
+        string name;
+        string description;
+        string image;
+    }
+
+    mapping(uint256 => Product) public products;
+    uint256 public nextProductId;
+
+    function registerProduct(string memory _name, string memory _description, string memory _image) public {
+        products[nextProductId] = Product(nextProductId, _name, _description, _image);
+        nextProductId++;
+    }
+}
+*/
