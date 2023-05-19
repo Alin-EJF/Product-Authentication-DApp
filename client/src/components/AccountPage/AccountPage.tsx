@@ -6,7 +6,7 @@ import { UserContext } from "../../UserContext";
 
 export default function AccountPage() {
   const navigate = useNavigate();
-  const { ready, user } = useContext(UserContext);
+  const { ready, user, setUser } = useContext(UserContext);
 
   if (!ready) {
     return <div>Loading...</div>;
@@ -16,9 +16,15 @@ export default function AccountPage() {
     navigate("/login");
   }
 
+  const handleLogout = () => {
+    // Perform logout logic here
+    setUser(null); // Set the user to null or perform any other necessary action
+    navigate("/login");
+  };
+
   return (
     <div className={styles.container}>
-      <h1>Account Page</h1>
+      <h2>Account Page</h2>
       <div className={styles.field}>
         <label>Username:</label>
         <input type="text" value={user?.username || ""} disabled={!user} />
@@ -45,6 +51,7 @@ export default function AccountPage() {
           <option value="uk">United Kingdom</option>
         </select>
       </div>
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 }
