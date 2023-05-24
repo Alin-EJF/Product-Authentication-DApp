@@ -8,7 +8,7 @@ export default function Header() {
     <div className="Header">
       <header className="header">
         <Link to={"/"} className="logo">
-          Logo
+          Home page
         </Link>
         <Link to={user ? "/account" : "/login"} className="login-button">
           {(!!user && <div>{user.email}</div>) || <div>Login</div>}

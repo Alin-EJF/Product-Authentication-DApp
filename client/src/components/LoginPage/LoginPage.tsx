@@ -25,7 +25,6 @@ export default function LoginPage() {
 
       toast.success("Login succeeded.");
       setTimeout(() => {
-        // Redirect
         navigate("/");
       }, 1500); // Delay 1.5s
     } catch (error) {
@@ -38,10 +37,11 @@ export default function LoginPage() {
     <div>
       <ToastContainer />
       <div className="content-container">
-        <h1 className="main-header">Login or Register</h1>
+        <h1 className="main-header">Login</h1>
+        <p className="note">Fields marked with * are compulsory</p>
         <form onSubmit={handleSubmit} className={styles.form_container}>
           <label htmlFor="email" className="sub-header">
-            Email
+            Email*
           </label>
           <input
             type="email"
@@ -53,7 +53,7 @@ export default function LoginPage() {
             required
           />
           <label htmlFor="password" className="sub-header">
-            Password
+            Password*
           </label>
           <input
             type="password"

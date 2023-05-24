@@ -1,14 +1,12 @@
-/* Reset default styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
   
-  /* Basic typography */
   body {
     font-family: 'Roboto', sans-serif;
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.5;
     color: #333;
     background-color: #f5f5f5;
@@ -56,17 +54,16 @@
   }
   
   .main-header {
-    font-size: 60px;
+    font-size: 90px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 70px;
+    margin-top: 150px;
   }
   
   .sub-header {
     font-size: 24px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 10px;
   }
   
   .input-field {

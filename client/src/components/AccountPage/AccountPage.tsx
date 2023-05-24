@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import styles from "./AccountPage.module.css";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../UserContext";
 
@@ -13,18 +15,25 @@ export default function AccountPage() {
   }
 
   if (ready && !user) {
+    // setTimeout(() => {
+    //   console.log("Two seconds have passed.");
+    // }, 2000);
     navigate("/login");
   }
 
-  const handleLogout = () => {
-    // Perform logout logic here
-    setUser(null); // Set the user to null or perform any other necessary action
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await axios.post("/auth/logout");
+      setUser(null);
+      toast.success("Logout succeeded.");
+    } catch (error) {
+      console.log("Failed to log out", error);
+    }
   };
 
   return (
     <div className={styles.container}>
-      <h2>Account Page</h2>
+      <h1>Account Page</h1>
       <div className={styles.field}>
         <label>Username:</label>
         <input type="text" value={user?.username || ""} disabled={!user} />

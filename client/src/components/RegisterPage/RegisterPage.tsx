@@ -9,7 +9,18 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [userType, setUserType] = useState(1);
+  const [CIF, setCIF] = useState("");
+  const [numarulRegistrulComertului, setNumarulRegistrulComertului] =
+    useState("");
+  const [denumireaLegala, setDenumireaLegala] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
   const navigate = useNavigate();
+
+  const fileSelectHandler = (event: any) => {
+    setSelectedFile(event.target.files[0].name);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,20 +33,23 @@ export default function RegisterPage() {
       .post("/auth/register", {
         email: email,
         password: password,
+        userType: userType,
+        CIF: CIF,
+        numarulRegistrulComertului: numarulRegistrulComertului,
+        denumireaLegala: denumireaLegala,
+        phoneNumber: phoneNumber,
       })
       .then((response) => {
         console.log(response.data);
-        toast.success("Registration successful! You can now login."); //more checks maybe not succeeded ?
+        toast.success("Registration successful! You can now login.");
         setTimeout(() => {
           navigate("/login");
-        }, 1500); // Delay 1.5s
+        }, 1500);
       })
       .catch((error) => {
         console.error(error);
-        toast.error("Registration failed. Please try again."); //add error in popup ?
+        toast.error("Registration failed. Please try again.");
       });
-
-    console.log("Email:", email, "Password:", password);
   };
 
   return (
@@ -43,9 +57,24 @@ export default function RegisterPage() {
       <ToastContainer />
       <div className="content-container">
         <h1 className="main-header">Register</h1>
+        <div className={styles.toggle_container}>
+          <button
+            className={userType === 1 ? styles.active : ""}
+            onClick={() => setUserType(1)}
+          >
+            Register as User
+          </button>
+          <button
+            className={userType === 2 ? styles.active : ""}
+            onClick={() => setUserType(2)}
+          >
+            Register as Provider
+          </button>
+        </div>
+        <p className="note">Fields marked with * are compulsory</p>
         <form onSubmit={handleSubmit} className={styles.form_container}>
           <label htmlFor="email" className="sub-header">
-            Email
+            Email*
           </label>
           <input
             type="email"
@@ -57,7 +86,7 @@ export default function RegisterPage() {
             required
           />
           <label htmlFor="password" className="sub-header">
-            Password
+            Password*
           </label>
           <input
             type="password"
@@ -69,7 +98,7 @@ export default function RegisterPage() {
             required
           />
           <label htmlFor="confirmPassword" className="sub-header">
-            Confirm Password
+            Confirm Password*
           </label>
           <input
             type="password"
@@ -80,6 +109,72 @@ export default function RegisterPage() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
+          {userType === 2 && (
+            <>
+              <label htmlFor="CIF" className="sub-header">
+                CIF*
+              </label>
+              <input
+                type="text"
+                id="CIF"
+                className="input-field"
+                placeholder="Enter your CIF"
+                value={CIF}
+                onChange={(e) => setCIF(e.target.value)}
+                required
+              />
+              <label
+                htmlFor="numarulRegistrulComertului"
+                className="sub-header"
+              >
+                Numarul Registrul Comertului*
+              </label>
+              <input
+                type="text"
+                id="numarulRegistrulComertului"
+                className="input-field"
+                placeholder="Enter your numarul Registrul Comertului"
+                value={numarulRegistrulComertului}
+                onChange={(e) => setNumarulRegistrulComertului(e.target.value)}
+                required
+              />
+              <label htmlFor="denumireaLegala" className="sub-header">
+                Denumirea legala a societatii*
+              </label>
+              <input
+                type="text"
+                id="denumireaLegala"
+                className="input-field"
+                placeholder="Enter your denumirea legala"
+                value={denumireaLegala}
+                onChange={(e) => setDenumireaLegala(e.target.value)}
+                required
+              />
+              <label htmlFor="phoneNumber" className="sub-header">
+                Phone Number*
+              </label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                className="input-field"
+                placeholder="Enter your phone number"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                required
+              />
+              <label htmlFor="fileUpload" className="sub-header">
+                Upload File*
+              </label>
+              <input
+                type="file"
+                id="fileUpload"
+                className="input-field"
+                onChange={fileSelectHandler}
+                required
+              />
+              {selectedFile && <p>File selected: {selectedFile}</p>}
+            </>
+          )}
           <button className="scan-button" type="submit">
             Register
           </button>
