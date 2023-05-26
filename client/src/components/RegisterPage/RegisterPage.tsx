@@ -35,9 +35,9 @@ export default function RegisterPage() {
         password: password,
         userType: userType,
         CIF: CIF,
-        numarulRegistrulComertului: numarulRegistrulComertului,
-        denumireaLegala: denumireaLegala,
-        phoneNumber: phoneNumber,
+        numar_registru: numarulRegistrulComertului,
+        denumire_legala: denumireaLegala,
+        phone_number: phoneNumber,
       })
       .then((response) => {
         console.log(response.data);

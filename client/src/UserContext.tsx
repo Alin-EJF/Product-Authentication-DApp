@@ -20,10 +20,16 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
   const [ready, setReady] = useState<boolean>(false);
   useEffect(() => {
     if (!user) {
-      axios.get("/auth/profile").then(({ data }) => {
-        setUser(data);
-        setReady(true);
-      });
+      axios
+        .get("/auth/profile")
+        .then(({ data }) => {
+          setUser(data);
+          setReady(true);
+        })
+        .catch((error) => {
+          console.error(error);
+          setReady(true);
+        });
     }
   }, []);
   return (
