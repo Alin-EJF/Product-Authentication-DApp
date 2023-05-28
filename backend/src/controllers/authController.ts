@@ -26,6 +26,7 @@ const handleRegister = async (userData: any, res: Response) => {
 };
 
 
+
 export const register = async (req: Request, res: Response): Promise<void> => {
   const { email } = req.body;
   const existingUser = await findUserByEmail(email);

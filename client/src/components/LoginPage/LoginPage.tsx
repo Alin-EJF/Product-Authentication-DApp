@@ -39,10 +39,8 @@ export default function LoginPage() {
       <div className="content-container">
         <h1 className="main-header">Login</h1>
         <p className="note">Fields marked with * are compulsory</p>
-        <form onSubmit={handleSubmit} className={styles.form_container}>
-          <label htmlFor="email" className="sub-header">
-            Email*
-          </label>
+        <form onSubmit={handleSubmit} className="form-container">
+          <label htmlFor="email">Email*</label>
           <input
             type="email"
             id="email"
@@ -52,9 +50,7 @@ export default function LoginPage() {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <label htmlFor="password" className="sub-header">
-            Password*
-          </label>
+          <label htmlFor="password">Password*</label>
           <input
             type="password"
             id="password"
@@ -64,7 +60,7 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button className="scan-button" type="submit">
+          <button className="generic-button" type="submit">
             Login
           </button>
         </form>

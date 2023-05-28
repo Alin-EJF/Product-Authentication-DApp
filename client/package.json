@@ -9,6 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/react-toastify": "^4.1.0",
     "@types/styled-components": "^5.1.26",
     "axios": "^1.4.0",
     "dom": "^0.0.3",

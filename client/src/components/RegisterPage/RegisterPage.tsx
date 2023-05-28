@@ -72,10 +72,8 @@ export default function RegisterPage() {
           </button>
         </div>
         <p className="note">Fields marked with * are compulsory</p>
-        <form onSubmit={handleSubmit} className={styles.form_container}>
-          <label htmlFor="email" className="sub-header">
-            Email*
-          </label>
+        <form onSubmit={handleSubmit} className="form-container">
+          <label htmlFor="email">Email*</label>
           <input
             type="email"
             id="email"
@@ -85,9 +83,7 @@ export default function RegisterPage() {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <label htmlFor="password" className="sub-header">
-            Password*
-          </label>
+          <label htmlFor="password">Password*</label>
           <input
             type="password"
             id="password"
@@ -97,9 +93,7 @@ export default function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <label htmlFor="confirmPassword" className="sub-header">
-            Confirm Password*
-          </label>
+          <label htmlFor="confirmPassword">Confirm Password*</label>
           <input
             type="password"
             id="confirmPassword"
@@ -111,9 +105,7 @@ export default function RegisterPage() {
           />
           {userType === 2 && (
             <>
-              <label htmlFor="CIF" className="sub-header">
-                CIF*
-              </label>
+              <label htmlFor="CIF">CIF*</label>
               <input
                 type="text"
                 id="CIF"
@@ -123,10 +115,7 @@ export default function RegisterPage() {
                 onChange={(e) => setCIF(e.target.value)}
                 required
               />
-              <label
-                htmlFor="numarulRegistrulComertului"
-                className="sub-header"
-              >
+              <label htmlFor="numarulRegistrulComertului">
                 Numarul Registrul Comertului*
               </label>
               <input
@@ -138,7 +127,7 @@ export default function RegisterPage() {
                 onChange={(e) => setNumarulRegistrulComertului(e.target.value)}
                 required
               />
-              <label htmlFor="denumireaLegala" className="sub-header">
+              <label htmlFor="denumireaLegala">
                 Denumirea legala a societatii*
               </label>
               <input
@@ -150,9 +139,7 @@ export default function RegisterPage() {
                 onChange={(e) => setDenumireaLegala(e.target.value)}
                 required
               />
-              <label htmlFor="phoneNumber" className="sub-header">
-                Phone Number*
-              </label>
+              <label htmlFor="phoneNumber">Phone Number*</label>
               <input
                 type="tel"
                 id="phoneNumber"
@@ -162,9 +149,7 @@ export default function RegisterPage() {
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 required
               />
-              <label htmlFor="fileUpload" className="sub-header">
-                Upload File*
-              </label>
+              <label htmlFor="fileUpload">Upload File*</label>
               <input
                 type="file"
                 id="fileUpload"
@@ -175,7 +160,7 @@ export default function RegisterPage() {
               {selectedFile && <p>File selected: {selectedFile}</p>}
             </>
           )}
-          <button className="scan-button" type="submit">
+          <button className="generic-button" type="submit">
             Register
           </button>
         </form>

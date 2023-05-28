@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import styles from "./AccountPage.module.css";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -27,65 +27,73 @@ export default function AccountPage() {
   };
 
   return (
-    <div className={styles.container}>
-      <h1>Account Page</h1>
+    <div className="content-container">
+      <h1 className="main-header">Account Page</h1>
       {ready ? (
         <>
-          <div className={styles.field}>
+          <form className="form-container">
+            {/*onSubmit={handleSubmit*/}
             <label>Email:</label>
-            <input type="email" value={user?.email || ""} readOnly={true} />
-          </div>
-          {user?.userType === 2 && (
-            <>
-              <div className={styles.field}>
+            <input
+              type="email"
+              className="input-field"
+              value={user?.email || ""}
+              readOnly={true}
+            />
+            {user?.userType === 2 && (
+              <>
                 <label>CIF:</label>
-                <input type="text" value={user?.CIF || ""} readOnly={true} />
-              </div>
-              <div className={styles.field}>
+                <input
+                  type="text"
+                  className="input-field"
+                  value={user?.CIF || ""}
+                  readOnly={true}
+                />
                 <label>Numar registru:</label>
                 <input
                   type="text"
+                  className="input-field"
                   value={user?.numar_registru || ""}
                   readOnly={true}
                 />
-              </div>
-              <div className={styles.field}>
                 <label>Denumire legala:</label>
                 <input
                   type="text"
+                  className="input-field"
                   value={user?.denumire_legala || ""}
                   readOnly={true}
                 />
-              </div>
-              <div className={styles.field}>
                 <label>Phone Number:</label>
                 <input
                   type="text"
+                  className="input-field"
                   value={user?.phone_number || ""}
                   readOnly={true}
                 />
-              </div>
-            </>
-          )}
-          <div className={styles.field}>
+              </>
+            )}
             <label>Language:</label>
-            <select disabled={!user} defaultValue={user?.language || "ro"}>
+            <select
+              disabled={!user}
+              className="input-field"
+              defaultValue={user?.language || "ro"}
+            >
               <option value="ro">Romanian</option>
               <option value="us">English</option>
               <option value="ca">French</option>
               <option value="uk">Spanish</option>
             </select>
-          </div>
-          <div className={styles.field}>
             <label>Country:</label>
-            <select disabled={!user} defaultValue="ro">
+            <select disabled={!user} className="input-field" defaultValue="ro">
               <option value="ro">Romania</option>
               <option value="us">United States</option>
               <option value="ca">Canada</option>
               <option value="uk">United Kingdom</option>
             </select>
-          </div>
-          <button onClick={handleLogout}>Logout</button>
+            <button className="generic-button" onClick={handleLogout}>
+              Logout
+            </button>
+          </form>
         </>
       ) : (
         <div>Loading...</div>

@@ -30,17 +30,6 @@
     font-weight: bold;
     color: #333;
   }
-  
-  .login-button {
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px 20px;
-    border: none;
-    background-color: #333;
-    color: #fff;
-    cursor: pointer; 
-    border-radius: 4px;
-  }
 
   .content-container {
     display: flex;
@@ -52,20 +41,29 @@
     padding: 0 20px;
     box-sizing: border-box;
   }
-  
+
+  h1 {  
+    padding-bottom: 6%;
+    font-size: 3.2em;
+    line-height: 1.1;
+  }
+
   .main-header {
     font-size: 90px;
     font-weight: bold;
     color: #333;
     margin-top: 150px;
   }
-  
-  .sub-header {
+
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     font-size: 24px;
     font-weight: bold;
     color: #333;
   }
-  
+
   .input-field {
     font-size: 18px;
     padding: 15px 25px;
@@ -75,8 +73,26 @@
     max-width: 300px;
     margin-bottom: 20px;
   }
-  
-  .scan-button {
+
+  input{    /* duplicate, but works on add product*/
+    font-size: 18px;
+    padding: 15px 25px;
+    border: 2px solid #333;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 20px;
+  }
+
+  .note {
+    font-size: 0.9em;
+    color: grey;
+    text-align: center;
+    margin-bottom: 9%;
+    margin-top: 10px;
+  }
+
+  .generic-button {
     font-size: 18px;
     font-weight: bold;
     padding: 15px 25px;
@@ -86,4 +102,28 @@
     cursor: pointer;
     border-radius: 4px;
   }
+
+  button {          /* only used in Register.tsx at the moment */
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #333;
+    cursor: pointer;
+    transition: border-color 0.25s;
+  }
+
+  button:hover,
+  .generic-button:hover {
+    border-color: #333;
+    background-color: #2f647b;
+  }
   
+  button:focus,
+  button:focus-visible,
+  .generic-button:focus,
+  .generic-button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }

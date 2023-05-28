@@ -29,7 +29,7 @@ export default function IndexPage() {
           />
         )}
         <button
-          className="scan-button"
+          className="generic-button"
           onClick={user?.userType === 2 ? handleAddProductClick : undefined}
         >
           {user?.userType === 2 ? "Add Product" : "Scan QR"}

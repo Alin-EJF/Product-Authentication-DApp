@@ -28,7 +28,7 @@ function ProviderForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="form-container" onSubmit={handleSubmit}>
       <input
         type="text"
         name="productOrigin"

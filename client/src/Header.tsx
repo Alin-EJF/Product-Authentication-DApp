@@ -10,7 +10,7 @@ export default function Header() {
         <Link to={"/"} className="logo">
           Home page
         </Link>
-        <Link to={user ? "/account" : "/login"} className="login-button">
+        <Link to={user ? "/account" : "/login"} className="generic-button">
           {(!!user && <div>{user.email}</div>) || <div>Login</div>}
         </Link>
       </header>

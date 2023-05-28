@@ -8,8 +8,8 @@ export interface Provider extends User{
   phone_number : number;
 }
 
-export const createProvider = async (providerData: any): Promise<Provider | null> => {
-  const query = 'INSERT INTO provider_users (email, password, userType, CIF, numar_registru, denumire_legala, phone_number) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *';
+export const createProvider = async (providerData: Provider): Promise<Provider | null> => {
+  const query = 'INSERT INTO provider_users (email, password, "userType", "CIF", numar_registru, denumire_legala, phone_number) VALUES (\$1, \$2, \$3, \$4, \$5, \$6, \$7) RETURNING *';
   const values = [providerData.email, providerData.password, providerData.userType, providerData.CIF, providerData.numar_registru, providerData.denumire_legala, providerData.phone_number];
 
   try {

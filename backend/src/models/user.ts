@@ -6,7 +6,7 @@ export interface User {
   userType: number;
 }
 
-export const createUser = async (userData: any): Promise<User | null> => {
+export const createUser = async (userData: User): Promise<User | null> => {
   const query = 'INSERT INTO users (email, password, userType) VALUES ($1, $2, $3) RETURNING *';
   const values = [userData.email, userData.password, userData.userType];
 
