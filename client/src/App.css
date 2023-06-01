@@ -4,6 +4,7 @@
     box-sizing: border-box;
   }
   
+  
   body {
     font-family: 'Roboto', sans-serif;
     font-size: 18px;
@@ -47,7 +48,32 @@
     box-sizing: border-box;
     padding-bottom: 150px;
   }
+
+
+
   
+
+  .dialog {
+    position: absolute;
+    width: 80%;
+    max-width: 600px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 300ms;
+  }
+  
+  .fade-enter {
+    opacity: 1;
+  }
+  
+  .fade-exit {
+    opacity: 0;
+  }
+
+
 
   h1 {  
     padding-bottom: 6%;
@@ -55,6 +81,9 @@
     line-height: 1.1;
   }
 
+  h3{
+    padding-bottom: 2%;
+  }
   .main-header {
     font-size: 90px;
     font-weight: bold;
@@ -68,7 +97,6 @@
     font-size: 24px;
     font-weight: bold;
     color: #333;
-
   }
 
   .input-field {

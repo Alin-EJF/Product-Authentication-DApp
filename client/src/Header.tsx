@@ -20,13 +20,13 @@ export default function Header() {
           </Link>
           {user?.userType === 2 && (
             <>
-              <Link to={"/"} className="header_link">
+              <Link to={"/manufacturer"} className="header_link">
                 Manufacturer
               </Link>
-              <Link to={"/"} className="header_link">
+              <Link to={"/distributor"} className="header_link">
                 Distributor
               </Link>
-              <Link to={"/"} className="header_link">
+              <Link to={"/retailer"} className="header_link">
                 Retailer
               </Link>
             </>

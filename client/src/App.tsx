@@ -1,6 +1,14 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-import { IndexPage, LoginPage, RegisterPage, AccountPage } from "./components";
+import {
+  IndexPage,
+  LoginPage,
+  RegisterPage,
+  AccountPage,
+  Manufacturer,
+  Distributor,
+  Retailer,
+} from "./components";
 import Layout from "./Layout";
 import axios from "axios";
 import { UserContextProvider } from "./UserContext";
@@ -17,6 +25,9 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/account" element={<AccountPage />} />
+          <Route path="/manufacturer" element={<Manufacturer />} />
+          <Route path="/distributor" element={<Distributor />} />
+          <Route path="/retailer" element={<Retailer />} />
         </Route>
       </Routes>
     </UserContextProvider>
