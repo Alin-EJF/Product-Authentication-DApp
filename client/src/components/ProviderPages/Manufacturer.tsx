@@ -1,16 +1,11 @@
-// Import necessary components and libraries
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef } from "react";
 import { UserContext } from "../../UserContext";
 import { FaTimes } from "react-icons/fa";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
+import "./Provider.css";
 
 export default function Manufacturer() {
   const { user } = useContext(UserContext);
   const dialogRef = useRef<HTMLDialogElement>(null);
-
-  const closeDialog = () => {
-    dialogRef.current?.close();
-  };
 
   return (
     <div>
@@ -47,7 +42,7 @@ export default function Manufacturer() {
         >
           <form method="dialog" className="form-container">
             <button
-              className="generic-button"
+              className="cancel-button"
               value="cancel"
               onClick={() => dialogRef?.current?.close()}
             >
@@ -79,7 +74,7 @@ export default function Manufacturer() {
             />
 
             <button
-              className="generic-button"
+              className="submit-button"
               formMethod="dialog"
               value="submit"
             >

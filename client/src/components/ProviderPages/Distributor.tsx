@@ -1,37 +1,161 @@
-import { useContext, useState } from "react";
+import { useContext, useRef } from "react";
 import { UserContext } from "../../UserContext";
+import { FaTimes } from "react-icons/fa";
+import "./Provider.css";
 
 export default function Distributor() {
   const { user } = useContext(UserContext);
-  const [showForm, setShowForm] = useState(false);
-
-  const handleAddProductClick = () => {
-    setShowForm(true);
-  };
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   return (
     <div>
       <div className="content-container">
         <h1 className="main-header">Update Product</h1>
+
         <h3 className="sub-header">
           Keep information about an existing product up to date
         </h3>
         <button
           className="generic-button"
-          onClick={handleAddProductClick}
-          style={{ marginBottom: "10%" }}
+          onClick={() => dialogRef?.current?.showModal()}
         >
-          Add product
+          Update product
         </button>
 
-        <h1 className="main-header">Product Registration</h1>
+        <dialog
+          ref={dialogRef}
+          onSubmit={(ev) => {
+            const formData = new FormData(ev.target as HTMLFormElement);
+            console.log(formData.get("productOrigin"));
+          }}
+          onClick={(ev) => {
+            const target = ev.target as HTMLDialogElement;
+            if (target.nodeName === "DIALOG") {
+              target.close();
+            }
+          }}
+          onClose={(ev) => {
+            const target = ev.target as HTMLDialogElement;
+            console.log(target.returnValue);
+          }}
+        >
+          <form method="dialog" className="form-container">
+            <button
+              className="cancel-button"
+              value="cancel"
+              onClick={() => dialogRef?.current?.close()}
+            >
+              <FaTimes />
+            </button>
+
+            <h2> Modify product details</h2>
+            <input name="productOrigin" placeholder="Product Origin" />
+            <input name="manufacturingDate" placeholder="Manufacturing Date" />
+            <input name="batchNumber" placeholder="Batch Number" />
+            <input
+              name="supplyChainJourney"
+              placeholder="Supply Chain Journey"
+            />
+            <input name="storageConditions" placeholder="Storage Conditions" />
+            <input
+              name="productSpecifications"
+              placeholder="Product Specifications"
+            />
+            <input name="certifications" placeholder="Certifications" />
+            <input
+              name="thirdPartyTestResults"
+              placeholder="Third-Party Test Results"
+            />
+            <input name="sellerInformation" placeholder="Seller Information" />
+            <input
+              name="productOwnershipHistory"
+              placeholder="Product Ownership History"
+            />
+
+            <button
+              className="submit-button"
+              formMethod="dialog"
+              value="submit"
+            >
+              Submit product
+            </button>
+          </form>
+        </dialog>
+
+        <h1 style={{ marginTop: "10%" }} className="main-header">
+          Product Registration
+        </h1>
+
         <h3 className="sub-header">
           Add a new product, complete it's data and generate tracking
           information
         </h3>
-        <button className="generic-button" onClick={handleAddProductClick}>
+        <button
+          className="generic-button"
+          onClick={() => dialogRef?.current?.showModal()}
+        >
           Add product
         </button>
+
+        <dialog
+          ref={dialogRef}
+          onSubmit={(ev) => {
+            const formData = new FormData(ev.target as HTMLFormElement);
+            console.log(formData.get("productOrigin"));
+          }}
+          onClick={(ev) => {
+            const target = ev.target as HTMLDialogElement;
+            if (target.nodeName === "DIALOG") {
+              target.close();
+            }
+          }}
+          onClose={(ev) => {
+            const target = ev.target as HTMLDialogElement;
+            console.log(target.returnValue);
+          }}
+        >
+          <form method="dialog" className="form-container">
+            <button
+              className="cancel-button"
+              value="cancel"
+              onClick={() => dialogRef?.current?.close()}
+            >
+              <FaTimes />
+            </button>
+
+            <h2> Modify product details</h2>
+            <input name="productOrigin" placeholder="Product Origin" />
+            <input name="manufacturingDate" placeholder="Manufacturing Date" />
+            <input name="batchNumber" placeholder="Batch Number" />
+            <input
+              name="supplyChainJourney"
+              placeholder="Supply Chain Journey"
+            />
+            <input name="storageConditions" placeholder="Storage Conditions" />
+            <input
+              name="productSpecifications"
+              placeholder="Product Specifications"
+            />
+            <input name="certifications" placeholder="Certifications" />
+            <input
+              name="thirdPartyTestResults"
+              placeholder="Third-Party Test Results"
+            />
+            <input name="sellerInformation" placeholder="Seller Information" />
+            <input
+              name="productOwnershipHistory"
+              placeholder="Product Ownership History"
+            />
+
+            <button
+              className="submit-button"
+              formMethod="dialog"
+              value="submit"
+            >
+              Submit product
+            </button>
+          </form>
+        </dialog>
       </div>
     </div>
   );

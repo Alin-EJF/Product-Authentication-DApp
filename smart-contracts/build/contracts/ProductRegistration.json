@@ -1,0 +1,224 @@
+{
+  "contractName": "ProductRegistration",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "count",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[],\"name\":\"count\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"project:/contracts/ProductRegistration.sol\":\"ProductRegistration\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/ProductRegistration.sol\":{\"keccak256\":\"0x40a798f04756549decb1c25ca1fe6476556fb018a65bef5083494065a8f2fc36\",\"urls\":[\"bzz-raw://fe189b21571d94e3ad6610d25e60a9acceb93fb1dcd9e923a453eb6ea9d9a452\",\"dweb:/ipfs/QmSGnquDALCWK1jmQYFzDmfP69J3uQtVYSTczctqVbNycP\"]}},\"version\":1}",
+  "bytecode": "0x608060405260008055348015601357600080fd5b506080806100226000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c806306661abd14602d575b600080fd5b60336045565b60408051918252519081900360200190f35b6000548156fea265627a7a7231582097ca2f80d1bb13332d62045068248ce562ce98e520657d7136d00083631e1c8264736f6c63430005100032",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c806306661abd14602d575b600080fd5b60336045565b60408051918252519081900360200190f35b6000548156fea265627a7a7231582097ca2f80d1bb13332d62045068248ce562ce98e520657d7136d00083631e1c8264736f6c63430005100032",
+  "sourceMap": "28:257:1:-;;;280:1;260:21;;28:257;8:9:-1;5:2;;;30:1;27;20:12;5:2;28:257:1;;;;;;;",
+  "deployedSourceMap": "28:257:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;28:257:1;;;;;;;;;;;;;;;;;;;260:21;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;:::o",
+  "source": "pragma solidity ^0.5.16;\r\n\r\ncontract ProductRegistration {\r\n    /*\r\n    struct Product {\r\n        uint256 id;\r\n        address provider;\r\n        string name;\r\n        string description;\r\n        uint256 timestamp;\r\n        bool isRegistered;\r\n    }*/\r\n\r\n    uint public count = 0;\r\n}\r\n",
+  "sourcePath": "C:\\Users\\tdgal\\OneDrive\\Desktop\\Licentacod\\Licenta_WebSite\\ProductTracking\\smart-contracts\\contracts\\ProductRegistration.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/ProductRegistration.sol",
+    "exportedSymbols": {
+      "ProductRegistration": [
+        62
+      ]
+    },
+    "id": 63,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 58,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".16"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:1"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 62,
+        "linearizedBaseContracts": [
+          62
+        ],
+        "name": "ProductRegistration",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 61,
+            "name": "count",
+            "nodeType": "VariableDeclaration",
+            "scope": 62,
+            "src": "260:21:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 59,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "260:4:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "30",
+              "id": 60,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "280:1:1",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_rational_0_by_1",
+                "typeString": "int_const 0"
+              },
+              "value": "0"
+            },
+            "visibility": "public"
+          }
+        ],
+        "scope": 63,
+        "src": "28:257:1"
+      }
+    ],
+    "src": "0:287:1"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "project:/contracts/ProductRegistration.sol",
+      "exportedSymbols": {
+        "ProductRegistration": [
+          62
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.5",
+            ".16"
+          ]
+        },
+        "id": 58,
+        "name": "PragmaDirective",
+        "src": "0:24:1"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+            62
+          ],
+          "name": "ProductRegistration",
+          "scope": 63
+        },
+        "children": [
+          {
+            "attributes": {
+              "constant": false,
+              "name": "count",
+              "scope": 62,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "uint256",
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "uint",
+                  "type": "uint256"
+                },
+                "id": 59,
+                "name": "ElementaryTypeName",
+                "src": "260:4:1"
+              },
+              {
+                "attributes": {
+                  "argumentTypes": null,
+                  "hexvalue": "30",
+                  "isConstant": false,
+                  "isLValue": false,
+                  "isPure": true,
+                  "lValueRequested": false,
+                  "subdenomination": null,
+                  "token": "number",
+                  "type": "int_const 0",
+                  "value": "0"
+                },
+                "id": 60,
+                "name": "Literal",
+                "src": "280:1:1"
+              }
+            ],
+            "id": 61,
+            "name": "VariableDeclaration",
+            "src": "260:21:1"
+          }
+        ],
+        "id": 62,
+        "name": "ContractDefinition",
+        "src": "28:257:1"
+      }
+    ],
+    "id": 63,
+    "name": "SourceUnit",
+    "src": "0:287:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
+  },
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0x7A267D6a2Ed9b8c669E165F182f69e5Ea26AF5EB",
+      "transactionHash": "0xb31dc24728f6436434d54044502579a5e2aa9f7045fb08c15a4c15665f550ec0"
+    }
+  },
+  "schemaVersion": "3.4.14",
+  "updatedAt": "2023-06-02T10:57:01.501Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}
