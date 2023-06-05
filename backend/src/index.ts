@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/auth", authRoutes);
-app.use('/nominatim', createProxyMiddleware({ 
+app.use('/nominatim', createProxyMiddleware({   //location request
   target: 'https://nominatim.openstreetmap.org/',
   changeOrigin: true,
   pathRewrite: {
@@ -37,6 +37,7 @@ app.use('/nominatim', createProxyMiddleware({
     proxyRes.headers['Access-Control-Allow-Origin'] = 'http://localhost:5173';
   }
 }));
+
 
 app.listen(3000, () => {
   console.log("Server listening on port 3000");

@@ -1,81 +1,20 @@
-import { useContext, useRef, useState, useEffect } from "react";
+import { useContext, useRef } from "react";
 import { UserContext } from "../../UserContext";
 import { FaTimes } from "react-icons/fa";
-import { Contract } from "web3-eth-contract";
-import { contractAbi } from "../contractsAbi/productRegAbi";
+import { contractAbi } from "../Blockchain/productRegAbi";
 import { ToastContainer, toast } from "react-toastify";
-import Web3 from "web3";
-import axios from "axios";
+import { useWeb3 } from "../Blockchain/useWeb3";
 import "./Provider.css";
-
-declare global {
-  interface Window {
-    ethereum: any;
-  }
-}
+import { useGeolocation } from "./useGeolocation";
 
 export default function Manufacturer() {
   const { user } = useContext(UserContext);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const [web3, setWeb3] = useState<Web3 | null>(null);
-  const [contract, setContract] = useState<Contract | null>(null);
-  const [geoLocation, setGeoLocation] = useState<string>("");
+  const geoLocation = useGeolocation();
 
   const abi = contractAbi;
   const contractAddress = "0x1c33DE250bBD36B580Ccf4785473F495D861B663";
-
-  // Get Geo Location
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords;
-          try {
-            const response = await axios.get(
-              `/nominatim/reverse?format=json&lat=${latitude}&lon=${longitude}`
-            );
-            const address = response.data.address;
-            const locationStr = `${
-              address.city || address.town || address.village
-            }, ${address.country}`;
-            setGeoLocation(locationStr);
-          } catch (error) {
-            console.log(error);
-          }
-        },
-        () => {
-          console.log("Unable to retrieve your location");
-        }
-      );
-    } else {
-      console.log("Geolocation is not supported by your browser");
-    }
-  }, []);
-
-  async function initWeb3() {
-    if (window.ethereum) {
-      const web3Instance = new Web3(window.ethereum);
-      try {
-        await window.ethereum.request({ method: "eth_requestAccounts" });
-      } catch (err) {
-        console.log("User cancelled");
-        console.log(err);
-      }
-      const contractInstance = new web3Instance.eth.Contract(
-        abi,
-        contractAddress
-      );
-      setWeb3(web3Instance);
-      setContract(contractInstance);
-    } else {
-      alert("Please install MetaMask to use this dApp!");
-    }
-  }
-
-  // Call initWeb3 when the component mounts
-  useEffect(() => {
-    initWeb3();
-  }, []);
+  const { web3, contract } = useWeb3(abi, contractAddress);
 
   return (
     <div>
