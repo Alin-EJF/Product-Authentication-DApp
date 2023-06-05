@@ -48,7 +48,7 @@ export default function Distributor() {
               <FaTimes />
             </button>
 
-            <h2> Modify product details</h2>
+            <h2 className="h2provider"> Modify product details</h2>
             <input name="productOrigin" placeholder="Product Origin" />
             <input name="manufacturingDate" placeholder="Manufacturing Date" />
             <input name="batchNumber" placeholder="Batch Number" />
@@ -123,7 +123,7 @@ export default function Distributor() {
               <FaTimes />
             </button>
 
-            <h2> Modify product details</h2>
+            <h2 className="h2provider"> Modify product details</h2>
             <input name="productOrigin" placeholder="Product Origin" />
             <input name="manufacturingDate" placeholder="Manufacturing Date" />
             <input name="batchNumber" placeholder="Batch Number" />

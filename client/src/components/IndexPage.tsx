@@ -1,8 +1,10 @@
-import React, { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../UserContext";
 import { FaSearch, FaQrcode } from "react-icons/fa";
 import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
+import { contractAbi } from "./contractsAbi/productRegAbi";
+import { ToastContainer, toast } from "react-toastify";
 
 declare global {
   interface Window {
@@ -16,256 +18,20 @@ export default function IndexPage() {
   const [web3, setWeb3] = useState<Web3 | null>(null);
   const [contract, setContract] = useState<Contract | null>(null);
 
-  // Contract setup. Replace these with your actual ABI and contract address
-  const abi = [
-    {
-      inputs: [],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "constructor",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: true,
-          internalType: "uint256",
-          name: "id",
-          type: "uint256",
-        },
-        {
-          indexed: true,
-          internalType: "string",
-          name: "productName",
-          type: "string",
-        },
-        {
-          indexed: false,
-          internalType: "string",
-          name: "productDescription",
-          type: "string",
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "dateOfRegistration",
-          type: "uint256",
-        },
-        {
-          indexed: false,
-          internalType: "string",
-          name: "geoLocation",
-          type: "string",
-        },
-        {
-          indexed: false,
-          internalType: "string",
-          name: "batch",
-          type: "string",
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "price",
-          type: "uint256",
-        },
-        {
-          indexed: false,
-          internalType: "string[]",
-          name: "certifications",
-          type: "string[]",
-        },
-      ],
-      name: "ProductRegistered",
-      type: "event",
-    },
-    {
-      constant: true,
-      inputs: [],
-      name: "productCount",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      payable: false,
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      constant: true,
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      name: "products",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "id",
-          type: "uint256",
-        },
-        {
-          internalType: "string",
-          name: "productName",
-          type: "string",
-        },
-        {
-          internalType: "string",
-          name: "productDescription",
-          type: "string",
-        },
-        {
-          internalType: "uint256",
-          name: "dateOfRegistration",
-          type: "uint256",
-        },
-        {
-          internalType: "string",
-          name: "geoLocation",
-          type: "string",
-        },
-        {
-          internalType: "string",
-          name: "batch",
-          type: "string",
-        },
-        {
-          internalType: "uint256",
-          name: "price",
-          type: "uint256",
-        },
-        {
-          internalType: "bool",
-          name: "isRegistered",
-          type: "bool",
-        },
-      ],
-      payable: false,
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      constant: false,
-      inputs: [
-        {
-          internalType: "string",
-          name: "productName",
-          type: "string",
-        },
-        {
-          internalType: "string",
-          name: "productDescription",
-          type: "string",
-        },
-        {
-          internalType: "string",
-          name: "geoLocation",
-          type: "string",
-        },
-        {
-          internalType: "string",
-          name: "batch",
-          type: "string",
-        },
-        {
-          internalType: "uint256",
-          name: "price",
-          type: "uint256",
-        },
-        {
-          internalType: "string[]",
-          name: "certifications",
-          type: "string[]",
-        },
-      ],
-      name: "registerProduct",
-      outputs: [],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      constant: true,
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "id",
-          type: "uint256",
-        },
-      ],
-      name: "getProduct",
-      outputs: [
-        {
-          components: [
-            {
-              internalType: "uint256",
-              name: "id",
-              type: "uint256",
-            },
-            {
-              internalType: "string",
-              name: "productName",
-              type: "string",
-            },
-            {
-              internalType: "string",
-              name: "productDescription",
-              type: "string",
-            },
-            {
-              internalType: "uint256",
-              name: "dateOfRegistration",
-              type: "uint256",
-            },
-            {
-              internalType: "string",
-              name: "geoLocation",
-              type: "string",
-            },
-            {
-              internalType: "string",
-              name: "batch",
-              type: "string",
-            },
-            {
-              internalType: "uint256",
-              name: "price",
-              type: "uint256",
-            },
-            {
-              internalType: "string[]",
-              name: "certifications",
-              type: "string[]",
-            },
-            {
-              internalType: "bool",
-              name: "isRegistered",
-              type: "bool",
-            },
-          ],
-          internalType: "struct ProductRegistration.Product",
-          name: "",
-          type: "tuple",
-        },
-      ],
-      payable: false,
-      stateMutability: "view",
-      type: "function",
-    },
-  ];
-  const contractAddress = "0xB8fEc61fC3b97aA92B72A21434f1858815C25d43";
+  // Contract setup
+  const abi = contractAbi;
+  const contractAddress = "0x1c33DE250bBD36B580Ccf4785473F495D861B663";
 
   // This function initializes web3 and the contract instance
   async function initWeb3() {
     if (window.ethereum) {
       const web3Instance = new Web3(window.ethereum);
-      await window.ethereum.enable();
+      try {
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+      } catch (err) {
+        console.log("User cancelled");
+        console.log(err);
+      }
       const contractInstance = new web3Instance.eth.Contract(
         abi,
         contractAddress
@@ -278,7 +44,8 @@ export default function IndexPage() {
   }
 
   // This function handles the button click event
-  async function handleClick() {
+  const handleClick: React.MouseEventHandler = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!web3 || !contract) {
       alert(
         "Web3 or the contract is not initialized. Please check MetaMask connection."
@@ -288,7 +55,8 @@ export default function IndexPage() {
 
     const product = await contract.methods.getProduct(productId).call();
     console.log(product);
-  }
+    toast.success("Product Found in the blockchain");
+  };
 
   // Call initWeb3 when the component mounts
   useEffect(() => {
@@ -297,6 +65,7 @@ export default function IndexPage() {
 
   return (
     <div>
+      <ToastContainer />
       <div className="content-container">
         <h1 className="main-header">
           {user?.userType === 2
@@ -304,7 +73,8 @@ export default function IndexPage() {
             : "Product Authentication"}
         </h1>
         <h2 className="sub-header">Type ID or scan QR code</h2>
-        <div
+        <form
+          onSubmit={handleClick}
           style={{
             display: "flex",
             justifyContent: "center",
@@ -316,13 +86,10 @@ export default function IndexPage() {
             placeholder="Type ID of product"
             onChange={(e) => setProductId(e.target.value)}
           />
-          <button
-            style={{ height: "55px", borderRadius: "0px" }}
-            onClick={handleClick}
-          >
+          <button style={{ height: "55px", borderRadius: "0px" }} type="submit">
             <FaSearch />
           </button>
-        </div>
+        </form>
         <button className="generic-button">
           <>
             <FaQrcode style={{ marginRight: "7px", paddingTop: "2px" }} />
