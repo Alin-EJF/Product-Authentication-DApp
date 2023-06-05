@@ -5,6 +5,7 @@ import { Contract } from "web3-eth-contract";
 import { contractAbi } from "../contractsAbi/productRegAbi";
 import { ToastContainer, toast } from "react-toastify";
 import Web3 from "web3";
+import axios from "axios";
 import "./Provider.css";
 
 declare global {
@@ -18,9 +19,38 @@ export default function Manufacturer() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [web3, setWeb3] = useState<Web3 | null>(null);
   const [contract, setContract] = useState<Contract | null>(null);
+  const [geoLocation, setGeoLocation] = useState<string>("");
 
   const abi = contractAbi;
   const contractAddress = "0x1c33DE250bBD36B580Ccf4785473F495D861B663";
+
+  // Get Geo Location
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          try {
+            const response = await axios.get(
+              `/nominatim/reverse?format=json&lat=${latitude}&lon=${longitude}`
+            );
+            const address = response.data.address;
+            const locationStr = `${
+              address.city || address.town || address.village
+            }, ${address.country}`;
+            setGeoLocation(locationStr);
+          } catch (error) {
+            console.log(error);
+          }
+        },
+        () => {
+          console.log("Unable to retrieve your location");
+        }
+      );
+    } else {
+      console.log("Geolocation is not supported by your browser");
+    }
+  }, []);
 
   async function initWeb3() {
     if (window.ethereum) {
@@ -144,10 +174,10 @@ export default function Manufacturer() {
               name="productDescription"
               placeholder="Product description  *"
             />
-            <input name="geoLocation" placeholder="Geo Location" />
             <input name="batch" placeholder="Batch  *" />
             <input name="price" placeholder="Product price" />
             <input name="certifications" placeholder="Certifications" />
+            <input type="hidden" name="geoLocation" value={geoLocation} />
             <button
               className="submit-button"
               formMethod="dialog"
