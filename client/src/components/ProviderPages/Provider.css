@@ -6,9 +6,9 @@
 
 
 dialog{
-    min-width: 470px;
-    background-color: #000000;
-    justify-content: center;
+    min-width: 550px;
+    background-color: #1a1919;
+    justify-content: left;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -32,9 +32,26 @@ dialog{
     }
   }
 
-dialog::backdrop {
+ dialog::backdrop {
     backdrop-filter: blur(0.5px);
   }
+
+
+.product-details {
+  display: grid;
+  padding-bottom: 15%;
+  padding-top: 5%;
+}
+
+.key-value-container {
+  display: grid;
+  grid-template-columns: min-content auto;
+  align-items: start;
+  grid-gap: 10px;
+  padding-bottom:2% ;
+}
+
+
 
 .cancel-button{
     font-size: 12px;

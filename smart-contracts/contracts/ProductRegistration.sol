@@ -68,9 +68,10 @@ contract ProductRegistration {
     ) public {
         require(bytes(productName).length > 0, "Product name is required");
         require(
-            bytes(productDescription).length <= 500,
-            "Product description is too long"
+            bytes(productDescription).length > 0,
+            "Product description is required"
         );
+        require(bytes(batch).length > 0, "Batch is required");
 
         productCount++;
         products[productCount] = Product(
@@ -101,37 +102,3 @@ contract ProductRegistration {
         return products[id];
     }
 }
-
-/*
-
- pragma solidity ^0.8.0;
-
-contract AccessControl {
-    mapping(address => string) public userRoles;
-
-    function setUserRole(address _user, string memory _role) public {
-        userRoles[_user] = _role;
-    }
-
-    function getUserRole(address _user) public view returns (string memory) {
-        return userRoles[_user];
-    }
-}
-
-pragma solidity ^0.8.0;
-
-contract ProductOwnership {
-    struct Ownership {
-        uint256 productId;
-        address owner;
-        uint256 timestamp;
-    }
-
-    mapping(uint256 => Ownership[]) public ownershipHistory;
-
-    function transferOwnership(uint256 _productId, address _newOwner) public {
-        ownershipHistory[_productId].push(Ownership(_productId, _newOwner, now));
-    }
-}
-
-*/

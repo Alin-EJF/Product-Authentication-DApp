@@ -1,4 +1,4 @@
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import { UserContext } from "../../UserContext";
 import { FaTimes } from "react-icons/fa";
 import { contractAbi } from "../Blockchain/productRegAbi";
@@ -6,11 +6,15 @@ import { ToastContainer, toast } from "react-toastify";
 import { useWeb3 } from "../Blockchain/useWeb3";
 import "./Provider.css";
 import { useGeolocation } from "./useGeolocation";
+import QRCode from "qrcode.react";
 
 export default function Manufacturer() {
   const { user } = useContext(UserContext);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const qrDialogRef = useRef<HTMLDialogElement>(null);
   const geoLocation = useGeolocation();
+
+  const [productId, setProductId] = useState(null);
 
   const abi = contractAbi;
   const contractAddress = "0x1c33DE250bBD36B580Ccf4785473F495D861B663";
@@ -65,10 +69,23 @@ export default function Manufacturer() {
                   price,
                   certifications
                 )
-                .send({ from: accounts[0] });
-              console.log("Product registered");
-              toast.success("Product registered in the blockchain");
-              dialogRef?.current?.close();
+                .send({ from: accounts[0] })
+                .on("receipt", (receipt: any) => {
+                  console.log("Product registered");
+                  toast.success("Product registered in the blockchain");
+
+                  // Extract the id
+                  let productId =
+                    receipt.events.ProductRegistered.returnValues[0];
+                  console.log("Product Id is: ", productId);
+                  setProductId(productId);
+
+                  dialogRef?.current?.close();
+                  qrDialogRef?.current?.showModal();
+                })
+                .on("error", (error: any) => {
+                  console.error(error);
+                });
             } catch (error) {
               if (
                 error !== null &&
@@ -125,6 +142,20 @@ export default function Manufacturer() {
               Submit product
             </button>
           </form>
+        </dialog>
+
+        <dialog ref={qrDialogRef} onClose={() => qrDialogRef?.current?.close()}>
+          <div className="form-container">
+            <h2 className="h2provider">Product Id from blockchain</h2>
+            {productId && (
+              <QRCode
+                style={{ marginBottom: "7%", marginTop: "7%" }}
+                value={productId}
+                size={250}
+              />
+            )}
+            <button onClick={() => qrDialogRef?.current?.close()}>Close</button>
+          </div>
         </dialog>
       </div>
     </div>

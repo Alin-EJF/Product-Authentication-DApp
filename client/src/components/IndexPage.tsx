@@ -1,15 +1,26 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import { UserContext } from "../UserContext";
-import { FaSearch, FaQrcode } from "react-icons/fa";
+import { FaSearch, FaTimes, FaQrcode } from "react-icons/fa";
 import { contractAbi } from "./Blockchain/productRegAbi";
 import { ToastContainer, toast } from "react-toastify";
 import { useWeb3 } from "./Blockchain/useWeb3";
-import QRCode from "qrcode.react"; // Importing the QRCode component
+
+type ProductData = {
+  id: string;
+  Name: string;
+  Description: string;
+  "Date of registration": number;
+  "Location of registration": string;
+  Batch: string;
+  Price: number;
+  "Certification/s": string[];
+} | null;
 
 export default function IndexPage() {
   const { user } = useContext(UserContext);
   const [productId, setProductId] = useState("");
-  const [showQR, setShowQR] = useState(false); // Add a new state variable for controlling QR code visibility
+  const [product, setProduct] = useState<ProductData>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   const contractAddress = "0x1c33DE250bBD36B580Ccf4785473F495D861B663";
   const { web3, contract } = useWeb3(contractAbi, contractAddress);
@@ -18,7 +29,6 @@ export default function IndexPage() {
     e: React.FormEvent
   ) => {
     e.preventDefault();
-    setShowQR(true); // Show QR code when the button is clicked
 
     if (!web3 || !contract) {
       alert(
@@ -27,9 +37,25 @@ export default function IndexPage() {
       return;
     }
 
-    const product = await contract.methods.getProduct(productId).call();
-    console.log(product);
-    toast.success("Product Found in the blockchain");
+    try {
+      const product = await contract.methods.getProduct(productId).call();
+
+      const productMapped = {
+        id: product[0],
+        Name: product[1],
+        Description: product[2],
+        "Date of registration": new Date(product[3] * 1000).toLocaleString(),
+        "Location of registration": product[4],
+        Batch: product[5],
+        Price: product[6],
+        "Certification/s": product[7],
+      };
+      setProduct(productMapped);
+      toast.success("Product Found in the blockchain");
+      dialogRef?.current?.showModal();
+    } catch (error) {
+      toast.error("Product not found in the blockchain");
+    }
   };
 
   return (
@@ -59,14 +85,59 @@ export default function IndexPage() {
             <FaSearch />
           </button>
         </form>
-        {/* Conditionally render QR code if showQR is true */}
-        {showQR && <QRCode value={productId} />}
         <button className="generic-button">
-          <>
-            <FaQrcode style={{ marginRight: "7px", paddingTop: "2px" }} />
-            Scan QR
-          </>
+          <FaQrcode style={{ marginRight: "7px", paddingTop: "2px" }} />
+          Scan QR
         </button>
+
+        <dialog
+          ref={dialogRef}
+          onClick={(ev) => {
+            const target = ev.target as HTMLDialogElement;
+            if (target.nodeName === "DIALOG") {
+              target.close();
+            }
+          }}
+          onClose={(ev) => {
+            const target = ev.target as HTMLDialogElement;
+            console.log(target.returnValue);
+          }}
+        >
+          <form method="dialog" className="form-container">
+            <button
+              className="cancel-button"
+              value="cancel"
+              onClick={() => dialogRef?.current?.close()}
+            >
+              <FaTimes />
+            </button>
+
+            <h2 className="h2provider">Product details</h2>
+            <div className="product-details">
+              {product &&
+                Object.entries(product).map(([key, value]) => (
+                  <div key={key} className="key-value-container">
+                    <div className="key" style={{ color: "white" }}>
+                      <strong>{key}:</strong>
+                    </div>
+                    <div className="value" style={{ color: "limegreen" }}>
+                      {value}
+                    </div>
+                  </div>
+                ))}
+            </div>
+
+            {user?.userType === 1 && (
+              <button
+                className="submit-button"
+                formMethod="dialog"
+                value="submit"
+              >
+                Add owner
+              </button>
+            )}
+          </form>
+        </dialog>
       </div>
     </div>
   );
