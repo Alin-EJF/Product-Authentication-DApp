@@ -8,6 +8,87 @@ import "./Provider.css";
 import { useGeolocation } from "./useGeolocation";
 import QRCode from "qrcode.react";
 
+export async function handleClick(
+  e: React.FormEvent,
+  web3: any,
+  contract: any,
+  productId: any,
+  dialogRef: any
+) {
+  e.preventDefault();
+
+  if (!web3 || !contract) {
+    alert(
+      "Web3 or the contract is not initialized. Please check MetaMask connection."
+    );
+    return;
+  }
+
+  try {
+    const product = await contract.methods.getProduct(productId).call();
+    if (product != null) {
+      toast.success("Product Found in the blockchain");
+      dialogRef?.current?.showModal();
+    }
+  } catch (error) {
+    toast.error("Product not found in the blockchain");
+  }
+}
+
+export async function handleUpdate(
+  e: React.FormEvent,
+  web3: any,
+  contract: any,
+  productId: any,
+  geoLocation: any,
+  dialogRef: any,
+  qrDialogRef: any
+) {
+  e.preventDefault();
+
+  const formData = new FormData(e.target as HTMLFormElement);
+  if (!web3 || !contract) {
+    alert(
+      "Web3 or the contract is not initialized. Please check MetaMask connection."
+    );
+    return;
+  }
+
+  try {
+    const price = Number(formData.get("price") || 0);
+    const certifications =
+      formData.get("certifications")?.toString().split(",") || [];
+
+    const accounts = await web3.eth.getAccounts();
+
+    await contract.methods
+      .updateProduct(productId, geoLocation, price, certifications)
+      .send({ from: accounts[0] })
+      .on("receipt", (receipt: any) => {
+        console.log("Product updated");
+        toast.success("Product updated in the blockchain");
+        dialogRef?.current?.close();
+        qrDialogRef?.current?.showModal();
+      })
+      .on("error", (error: any) => {
+        console.error(error);
+      });
+  } catch (error) {
+    if (
+      error !== null &&
+      typeof error === "object" &&
+      "code" in error &&
+      error.code === 4001
+    ) {
+      // User denied transaction signature
+      console.log("User denied transaction signature");
+      toast.error("User denied transaction signature");
+    } else {
+      console.error(error);
+    }
+  }
+}
+
 export default function Retailer() {
   const { user } = useContext(UserContext);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -19,77 +100,6 @@ export default function Retailer() {
   const abi = contractAbi;
   const { web3, contract } = useWeb3(abi, contractAddress);
 
-  const handleClick: React.FormEventHandler<HTMLFormElement> = async (
-    e: React.FormEvent
-  ) => {
-    e.preventDefault();
-
-    if (!web3 || !contract) {
-      alert(
-        "Web3 or the contract is not initialized. Please check MetaMask connection."
-      );
-      return;
-    }
-
-    try {
-      const product = await contract.methods.getProduct(productId).call();
-      if (product != null) {
-        toast.success("Product Found in the blockchain");
-        dialogRef?.current?.showModal();
-      }
-    } catch (error) {
-      toast.error("Product not found in the blockchain");
-    }
-  };
-
-  const handleUpdate: React.FormEventHandler<HTMLFormElement> = async (
-    e: React.FormEvent
-  ) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.target as HTMLFormElement);
-    if (!web3 || !contract) {
-      alert(
-        "Web3 or the contract is not initialized. Please check MetaMask connection."
-      );
-      return;
-    }
-
-    try {
-      const price = Number(formData.get("price") || 0);
-      const certifications =
-        formData.get("certifications")?.toString().split(",") || [];
-
-      const accounts = await web3.eth.getAccounts();
-
-      await contract.methods
-        .updateProduct(productId, geoLocation, price, certifications)
-        .send({ from: accounts[0] })
-        .on("receipt", (receipt: any) => {
-          console.log("Product updated");
-          toast.success("Product updated in the blockchain");
-          dialogRef?.current?.close();
-          qrDialogRef?.current?.showModal();
-        })
-        .on("error", (error: any) => {
-          console.error(error);
-        });
-    } catch (error) {
-      if (
-        error !== null &&
-        typeof error === "object" &&
-        "code" in error &&
-        error.code === 4001
-      ) {
-        // User denied transaction signature
-        console.log("User denied transaction signature");
-        toast.error("User denied transaction signature");
-      } else {
-        console.error(error);
-      }
-    }
-  };
-
   return (
     <div>
       <ToastContainer />
@@ -100,7 +110,7 @@ export default function Retailer() {
         </h3>
 
         <form
-          onSubmit={handleClick}
+          onSubmit={(e) => handleClick(e, web3, contract, productId, dialogRef)}
           style={{
             display: "flex",
             justifyContent: "center",
@@ -123,7 +133,17 @@ export default function Retailer() {
 
         <dialog
           ref={dialogRef}
-          onSubmit={handleUpdate}
+          onSubmit={(e) =>
+            handleUpdate(
+              e,
+              web3,
+              contract,
+              productId,
+              geoLocation,
+              dialogRef,
+              qrDialogRef
+            )
+          }
           onClick={(ev) => {
             const target = ev.target as HTMLDialogElement;
             if (target.nodeName === "DIALOG") {
@@ -137,6 +157,7 @@ export default function Retailer() {
         >
           <form method="dialog" className="form-container">
             <button
+              type="button"
               className="cancel-button"
               value="cancel"
               onClick={() => dialogRef?.current?.close()}

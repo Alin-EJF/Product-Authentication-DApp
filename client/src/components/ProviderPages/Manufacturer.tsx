@@ -8,6 +8,72 @@ import "./Provider.css";
 import { useGeolocation } from "./useGeolocation";
 import QRCode from "qrcode.react";
 
+export async function handleRegisterSubmit(
+  e: React.FormEvent,
+  web3: any,
+  contract: any,
+  setProductId: any
+) {
+  e.preventDefault();
+
+  const formData = new FormData(e.target as HTMLFormElement);
+  if (!web3 || !contract) {
+    alert(
+      "Web3 or the contract is not initialized. Please check MetaMask connection."
+    );
+    return;
+  }
+  try {
+    const productName = formData.get("productName")?.toString() || "";
+    const productDescription =
+      formData.get("productDescription")?.toString() || "";
+    const geoLocation = formData.get("geoLocation")?.toString() || "";
+    const batch = formData.get("batch")?.toString() || "";
+    const price = Number(formData.get("price") || 0);
+    const certifications =
+      formData.get("certifications")?.toString().split(",") || [];
+
+    const accounts = await web3.eth.getAccounts();
+
+    await contract.methods
+      .registerProduct(
+        productName,
+        productDescription,
+        geoLocation,
+        batch,
+        price,
+        certifications
+      )
+      .send({ from: accounts[0] })
+      .on("receipt", (receipt: any) => {
+        console.log("Product registered");
+        toast.success("Product registered in the blockchain");
+
+        // Extract the id
+        let productId = receipt.events.ProductRegistered.returnValues[0];
+        console.log("Product Id is: ", productId);
+        setProductId(productId);
+      })
+      .on("error", (error: any) => {
+        console.error(error);
+      });
+  } catch (error) {
+    if (
+      error !== null &&
+      typeof error === "object" &&
+      "code" in error &&
+      error.code === 4001
+    ) {
+      // User denied transaction signature
+      console.log("User denied transaction signature");
+      toast.error("User denied transaction signature");
+    } else {
+      // Handle other errors here
+      console.error(error);
+    }
+  }
+}
+
 export default function Manufacturer() {
   const { user } = useContext(UserContext);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -38,69 +104,9 @@ export default function Manufacturer() {
 
         <dialog
           ref={dialogRef}
-          onSubmit={async (ev) => {
-            ev.preventDefault();
-            const formData = new FormData(ev.target as HTMLFormElement);
-            if (!web3 || !contract) {
-              alert(
-                "Web3 or the contract is not initialized. Please check MetaMask connection."
-              );
-              return;
-            }
-            try {
-              const productName = formData.get("productName")?.toString() || "";
-              const productDescription =
-                formData.get("productDescription")?.toString() || "";
-              const geoLocation = formData.get("geoLocation")?.toString() || "";
-              const batch = formData.get("batch")?.toString() || "";
-              const price = Number(formData.get("price") || 0);
-              const certifications =
-                formData.get("certifications")?.toString().split(",") || [];
-
-              const accounts = await web3.eth.getAccounts();
-
-              await contract.methods
-                .registerProduct(
-                  productName,
-                  productDescription,
-                  geoLocation,
-                  batch,
-                  price,
-                  certifications
-                )
-                .send({ from: accounts[0] })
-                .on("receipt", (receipt: any) => {
-                  console.log("Product registered");
-                  toast.success("Product registered in the blockchain");
-
-                  // Extract the id
-                  let productId =
-                    receipt.events.ProductRegistered.returnValues[0];
-                  console.log("Product Id is: ", productId);
-                  setProductId(productId);
-
-                  dialogRef?.current?.close();
-                  qrDialogRef?.current?.showModal();
-                })
-                .on("error", (error: any) => {
-                  console.error(error);
-                });
-            } catch (error) {
-              if (
-                error !== null &&
-                typeof error === "object" &&
-                "code" in error &&
-                error.code === 4001
-              ) {
-                // User denied transaction signature
-                console.log("User denied transaction signature");
-                toast.error("User denied transaction signature");
-              } else {
-                // Handle other errors here
-                console.error(error);
-              }
-            }
-          }}
+          onSubmit={(ev) =>
+            handleRegisterSubmit(ev, web3, contract, setProductId)
+          }
           onClick={(ev) => {
             const target = ev.target as HTMLDialogElement;
             if (target.nodeName === "DIALOG") {
@@ -114,6 +120,7 @@ export default function Manufacturer() {
         >
           <form method="dialog" className="form-container">
             <button
+              type="button"
               className="cancel-button"
               value="cancel"
               onClick={() => dialogRef?.current?.close()}

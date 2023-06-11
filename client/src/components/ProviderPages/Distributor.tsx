@@ -1,16 +1,54 @@
 import { useContext, useRef, useState } from "react";
 import { UserContext } from "../../UserContext";
-import { FaTimes } from "react-icons/fa";
+import { FaSearch, FaTimes, FaQrcode } from "react-icons/fa";
 import { contractAbi, contractAddress } from "../Blockchain/productReg";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { useWeb3 } from "../Blockchain/useWeb3";
+import { handleRegisterSubmit } from "./Manufacturer";
+import { handleClick, handleUpdate } from "./Retailer";
 import "./Provider.css";
 import { useGeolocation } from "./useGeolocation";
 import QRCode from "qrcode.react";
 
+function DialogForm({ title, children, dialogRef, onSubmit }) {
+  return (
+    <dialog
+      ref={dialogRef}
+      onSubmit={onSubmit}
+      onClick={(ev) => {
+        const target = ev.target as HTMLDialogElement;
+        if (target.nodeName === "DIALOG") {
+          target.close();
+        }
+      }}
+      onClose={(ev) => {
+        const target = ev.target as HTMLDialogElement;
+        console.log(target.returnValue);
+      }}
+    >
+      <form method="dialog" className="form-container">
+        <button
+          type="button"
+          className="cancel-button"
+          value="cancel"
+          onClick={() => dialogRef?.current?.close()}
+        >
+          <FaTimes />
+        </button>
+        <h2 className="h2provider"> {title} </h2>
+        <h6 className="h2provider italic-text">
+          fields marked with '*' are compulsory
+        </h6>
+        {children}
+      </form>
+    </dialog>
+  );
+}
+
 export default function Distributor() {
   const { user } = useContext(UserContext);
-  const dialogRef = useRef<HTMLDialogElement>(null);
+  const updateDialogRef = useRef<HTMLDialogElement>(null);
+  const registerDialogRef = useRef<HTMLDialogElement>(null);
   const qrDialogRef = useRef<HTMLDialogElement>(null);
   const geoLocation = useGeolocation();
 
@@ -23,6 +61,58 @@ export default function Distributor() {
     <div>
       <ToastContainer />
       <div className="content-container">
+        <h1 className="main-header">Update Product</h1>
+        <h3 className="sub-header">
+          Keep information about an existing product up to date
+        </h3>
+
+        <form
+          onSubmit={(e) =>
+            handleClick(e, web3, contract, productId, updateDialogRef)
+          }
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <input
+            type="text"
+            className="input-field"
+            placeholder="Type ID of product"
+            onChange={(e) => setProductId(e.target.value)}
+          />
+          <button style={{ height: "55px", borderRadius: "0px" }} type="submit">
+            <FaSearch />
+          </button>
+        </form>
+        <button className="generic-button">
+          <FaQrcode style={{ marginRight: "7px", paddingTop: "2px" }} />
+          Scan QR
+        </button>
+
+        <DialogForm
+          title="Update product fields"
+          dialogRef={updateDialogRef}
+          onSubmit={(e) =>
+            handleUpdate(
+              e,
+              web3,
+              contract,
+              productId,
+              geoLocation,
+              updateDialogRef,
+              qrDialogRef
+            )
+          }
+        >
+          <input name="price" placeholder="Current price" />
+          <input name="certifications" placeholder="Certifications" />
+          <input type="hidden" name="geoLocation" value={geoLocation} />
+          <button className="submit-button" formMethod="dialog" value="submit">
+            Update product
+          </button>
+        </DialogForm>
+
         <h1 className="main-header">Product Registration</h1>
         <h3 className="sub-header">
           Add a new product, complete it's data and generate tracking
@@ -31,117 +121,31 @@ export default function Distributor() {
 
         <button
           className="generic-button"
-          onClick={() => dialogRef?.current?.showModal()}
+          onClick={() => registerDialogRef?.current?.showModal()}
         >
           Add product
         </button>
 
-        <dialog
-          ref={dialogRef}
-          onSubmit={async (ev) => {
-            ev.preventDefault();
-            const formData = new FormData(ev.target as HTMLFormElement);
-            if (!web3 || !contract) {
-              alert(
-                "Web3 or the contract is not initialized. Please check MetaMask connection."
-              );
-              return;
-            }
-            try {
-              const productName = formData.get("productName")?.toString() || "";
-              const productDescription =
-                formData.get("productDescription")?.toString() || "";
-              const geoLocation = formData.get("geoLocation")?.toString() || "";
-              const batch = formData.get("batch")?.toString() || "";
-              const price = Number(formData.get("price") || 0);
-              const certifications =
-                formData.get("certifications")?.toString().split(",") || [];
-
-              const accounts = await web3.eth.getAccounts();
-
-              await contract.methods
-                .registerProduct(
-                  productName,
-                  productDescription,
-                  geoLocation,
-                  batch,
-                  price,
-                  certifications
-                )
-                .send({ from: accounts[0] })
-                .on("receipt", (receipt: any) => {
-                  console.log("Product registered");
-                  toast.success("Product registered in the blockchain");
-
-                  // Extract the id
-                  let productId =
-                    receipt.events.ProductRegistered.returnValues[0];
-                  console.log("Product Id is: ", productId);
-                  setProductId(productId);
-
-                  dialogRef?.current?.close();
-                  qrDialogRef?.current?.showModal();
-                })
-                .on("error", (error: any) => {
-                  console.error(error);
-                });
-            } catch (error) {
-              if (
-                error !== null &&
-                typeof error === "object" &&
-                "code" in error &&
-                error.code === 4001
-              ) {
-                // User denied transaction signature
-                console.log("User denied transaction signature");
-                toast.error("User denied transaction signature");
-              } else {
-                // Handle other errors here
-                console.error(error);
-              }
-            }
-          }}
-          onClick={(ev) => {
-            const target = ev.target as HTMLDialogElement;
-            if (target.nodeName === "DIALOG") {
-              target.close();
-            }
-          }}
-          onClose={(ev) => {
-            const target = ev.target as HTMLDialogElement;
-            console.log(target.returnValue);
-          }}
+        <DialogForm
+          title="Add product details"
+          dialogRef={registerDialogRef}
+          onSubmit={(ev) =>
+            handleRegisterSubmit(ev, web3, contract, setProductId)
+          }
         >
-          <form method="dialog" className="form-container">
-            <button
-              className="cancel-button"
-              value="cancel"
-              onClick={() => dialogRef?.current?.close()}
-            >
-              <FaTimes />
-            </button>
-            <h2 className="h2provider"> Add product details</h2>
-            <h6 className="h2provider italic-text">
-              fields marked with '*'' are compulsory
-            </h6>
-            <input name="productName" placeholder="Product name  *" />
-            <input
-              name="productDescription"
-              placeholder="Product description  *"
-            />
-            <input name="batch" placeholder="Batch  *" />
-            <input name="price" placeholder="Product price" />
-            <input name="certifications" placeholder="Certifications" />
-            <input type="hidden" name="geoLocation" value={geoLocation} />
-            <button
-              className="submit-button"
-              formMethod="dialog"
-              value="submit"
-            >
-              Submit product
-            </button>
-          </form>
-        </dialog>
+          <input name="productName" placeholder="Product name  *" />
+          <input
+            name="productDescription"
+            placeholder="Product description  *"
+          />
+          <input name="batch" placeholder="Batch  *" />
+          <input name="price" placeholder="Product price" />
+          <input name="certifications" placeholder="Certifications" />
+          <input type="hidden" name="geoLocation" value={geoLocation} />
+          <button className="submit-button" formMethod="dialog" value="submit">
+            Submit product
+          </button>
+        </DialogForm>
 
         <dialog ref={qrDialogRef} onClose={() => qrDialogRef?.current?.close()}>
           <div className="form-container">
