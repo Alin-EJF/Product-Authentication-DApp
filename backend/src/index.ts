@@ -27,6 +27,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/auth", authRoutes);
+
 app.use('/nominatim', createProxyMiddleware({   //location request
   target: 'https://nominatim.openstreetmap.org/',
   changeOrigin: true,

@@ -1,4 +1,5 @@
 import { useContext, useRef, useState } from "react";
+import axios from "axios";
 import { UserContext } from "../../UserContext";
 import { FaTimes } from "react-icons/fa";
 import { contractAbi, contractAddress } from "../Blockchain/productReg";
@@ -7,6 +8,15 @@ import { useWeb3 } from "../Blockchain/useWeb3";
 import "./Provider.css";
 import { useGeolocation } from "./useGeolocation";
 import QRCode from "qrcode.react";
+
+async function writeNfc(productId: string) {
+  try {
+    const res = await axios.post("/auth/write-nfc", { productId });
+    console.log("NFC write response: ", res.data);
+  } catch (err) {
+    console.error("Error writing NFC: ", err);
+  }
+}
 
 export async function handleRegisterSubmit(
   e: React.FormEvent,
@@ -53,6 +63,9 @@ export async function handleRegisterSubmit(
         let productId = receipt.events.ProductRegistered.returnValues[0];
         console.log("Product Id is: ", productId);
         setProductId(productId);
+
+        // Send productId to backend to be written to NFC
+        writeNfc(productId);
       })
       .on("error", (error: any) => {
         console.error(error);
