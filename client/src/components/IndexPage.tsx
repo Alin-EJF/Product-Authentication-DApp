@@ -1,7 +1,7 @@
 import { useContext, useState, useRef } from "react";
 import { UserContext } from "../UserContext";
 import { FaSearch, FaTimes, FaQrcode } from "react-icons/fa";
-import { contractAbi } from "./Blockchain/productRegAbi";
+import { contractAbi, contractAddress } from "./Blockchain/productReg";
 import { ToastContainer, toast } from "react-toastify";
 import { useWeb3 } from "./Blockchain/useWeb3";
 
@@ -22,7 +22,6 @@ export default function IndexPage() {
   const [product, setProduct] = useState<ProductData>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
-  const contractAddress = "0x1c33DE250bBD36B580Ccf4785473F495D861B663";
   const { web3, contract } = useWeb3(contractAbi, contractAddress);
 
   const handleClick: React.FormEventHandler<HTMLFormElement> = async (

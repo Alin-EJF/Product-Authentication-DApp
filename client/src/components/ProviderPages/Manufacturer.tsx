@@ -1,7 +1,7 @@
 import { useContext, useRef, useState } from "react";
 import { UserContext } from "../../UserContext";
 import { FaTimes } from "react-icons/fa";
-import { contractAbi } from "../Blockchain/productRegAbi";
+import { contractAbi, contractAddress } from "../Blockchain/productReg";
 import { ToastContainer, toast } from "react-toastify";
 import { useWeb3 } from "../Blockchain/useWeb3";
 import "./Provider.css";
@@ -17,7 +17,6 @@ export default function Manufacturer() {
   const [productId, setProductId] = useState(null);
 
   const abi = contractAbi;
-  const contractAddress = "0x1c33DE250bBD36B580Ccf4785473F495D861B663";
   const { web3, contract } = useWeb3(abi, contractAddress);
 
   return (

@@ -17,7 +17,16 @@ contract ProductRegistration {
     }
 
     mapping(uint256 => Product) public products;
+    mapping(uint256 => address) public lastUpdatedBy;
     uint256 public productCount = 0;
+
+    event ProductUpdated(
+        uint256 indexed id,
+        string geoLocation,
+        uint256 dateOfRegistration,
+        uint256 price,
+        address updatedBy
+    );
 
     event ProductRegistered(
         uint256 indexed id,
@@ -94,6 +103,36 @@ contract ProductRegistration {
             batch,
             price,
             certifications
+        );
+    }
+
+    function updateProduct(
+        uint256 id,
+        string memory geoLocation,
+        uint256 price,
+        string[] memory certifications
+    ) public {
+        require(products[id].isRegistered, "Product not found");
+
+        products[id].geoLocation = geoLocation;
+        products[id].dateOfRegistration = block.timestamp;
+        if (price > 0) {
+            products[id].price = price;
+        }
+
+        // append new certifications
+        for (uint i = 0; i < certifications.length; i++) {
+            products[id].certifications.push(certifications[i]);
+        }
+
+        lastUpdatedBy[id] = msg.sender;
+
+        emit ProductUpdated(
+            id,
+            geoLocation,
+            block.timestamp,
+            price,
+            msg.sender
         );
     }
 
