@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
-import { FaHome } from "react-icons/fa";
+import { FaAlignJustify, FaHome, FaIdBadge } from "react-icons/fa";
 
 export default function Header() {
   const { user } = useContext(UserContext);
@@ -33,7 +33,12 @@ export default function Header() {
           )}
         </div>
         <Link to={user ? "/account" : "/login"} className="generic-button">
-          {(!!user && <div>{user.email}</div>) || <div>Login</div>}
+          {(!!user && (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <FaIdBadge style={{ fontSize: "27px", marginRight: "8px" }} />
+              <div>{user.email}</div>
+            </div>
+          )) || <div>Login</div>}
         </Link>
       </header>
     </div>

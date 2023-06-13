@@ -90,7 +90,11 @@ export default function AccountPage() {
               <option value="ca">Canada</option>
               <option value="uk">United Kingdom</option>
             </select>
-            <button className="generic-button" onClick={handleLogout}>
+            <button
+              style={{ marginBottom: "15%" }}
+              className="generic-button"
+              onClick={handleLogout}
+            >
               Logout
             </button>
           </form>
