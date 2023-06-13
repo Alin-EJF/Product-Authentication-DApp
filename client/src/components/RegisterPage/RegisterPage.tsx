@@ -11,9 +11,8 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [userType, setUserType] = useState(1);
   const [CIF, setCIF] = useState("");
-  const [numarulRegistrulComertului, setNumarulRegistrulComertului] =
-    useState("");
-  const [denumireaLegala, setDenumireaLegala] = useState("");
+  const [tradeRegisterNumber, setTradeRegisterNumber] = useState("");
+  const [legalNameOfTheCompany, setLegalNameOfTheCompany] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const navigate = useNavigate();
@@ -35,8 +34,8 @@ export default function RegisterPage() {
         password: password,
         userType: userType,
         CIF: CIF,
-        numar_registru: numarulRegistrulComertului,
-        denumire_legala: denumireaLegala,
+        trade_register_number: tradeRegisterNumber,
+        legal_name: legalNameOfTheCompany,
         phone_number: phoneNumber,
       })
       .then((response) => {
@@ -78,7 +77,7 @@ export default function RegisterPage() {
             type="email"
             id="email"
             className="input-field"
-            placeholder="Enter your email"
+            placeholder="example@gmail.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -88,7 +87,7 @@ export default function RegisterPage() {
             type="password"
             id="password"
             className="input-field"
-            placeholder="Enter your password"
+            placeholder="password123"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -98,7 +97,7 @@ export default function RegisterPage() {
             type="password"
             id="confirmPassword"
             className="input-field"
-            placeholder="Confirm your password"
+            placeholder="password123"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
@@ -110,33 +109,33 @@ export default function RegisterPage() {
                 type="text"
                 id="CIF"
                 className="input-field"
-                placeholder="Enter your CIF"
+                placeholder="RO12345678"
                 value={CIF}
                 onChange={(e) => setCIF(e.target.value)}
                 required
               />
-              <label htmlFor="numarulRegistrulComertului">
-                Numarul Registrul Comertului*
+              <label htmlFor="tradeRegisterNumber">
+                Trade Register Number*
               </label>
               <input
                 type="text"
-                id="numarulRegistrulComertului"
+                id="tradeRegisterNumber"
                 className="input-field"
-                placeholder="Enter your numarul Registrul Comertului"
-                value={numarulRegistrulComertului}
-                onChange={(e) => setNumarulRegistrulComertului(e.target.value)}
+                placeholder="J40/372/2002"
+                value={tradeRegisterNumber}
+                onChange={(e) => setTradeRegisterNumber(e.target.value)}
                 required
               />
-              <label htmlFor="denumireaLegala">
-                Denumirea legala a societatii*
+              <label htmlFor="legalNameOfTheCompany">
+                Legal Name of the Company*
               </label>
               <input
                 type="text"
-                id="denumireaLegala"
+                id="legalNameOfTheCompany"
                 className="input-field"
-                placeholder="Enter your denumirea legala"
-                value={denumireaLegala}
-                onChange={(e) => setDenumireaLegala(e.target.value)}
+                placeholder="Blue Ribbon Sports, Inc."
+                value={legalNameOfTheCompany}
+                onChange={(e) => setLegalNameOfTheCompany(e.target.value)}
                 required
               />
               <label htmlFor="phoneNumber">Phone Number*</label>
@@ -144,12 +143,12 @@ export default function RegisterPage() {
                 type="tel"
                 id="phoneNumber"
                 className="input-field"
-                placeholder="Enter your phone number"
+                placeholder="+40-0751-123-123"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 required
               />
-              <label htmlFor="fileUpload">Upload File*</label>
+              <label htmlFor="fileUpload">Upload Company's certificate*</label>
               <input
                 type="file"
                 id="fileUpload"
