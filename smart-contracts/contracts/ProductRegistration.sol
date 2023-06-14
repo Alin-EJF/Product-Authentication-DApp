@@ -116,7 +116,7 @@ contract ProductRegistration {
             manufacturer,
             distributor,
             retailer,
-            msg.sender, // set the owner to be the address from which the contract is called
+            msg.sender,
             true
         );
         emit ProductRegistered(
@@ -162,9 +162,10 @@ contract ProductRegistration {
 
         emit ProductUpdated(
             id,
-            geoLocation, // It should take the last inserted geoLocation
+            geoLocation,
             block.timestamp,
-            price, // It should take the last inserted price
+            price,
+            certifications,
             msg.sender
         );
     }

@@ -24,7 +24,9 @@ export async function handleRegisterSubmit(
   contract: any,
   setProductId: any,
   qrDialogRef: any,
-  user: any
+  manufacturer: any,
+  distributor: any,
+  retailer: any
 ) {
   e.preventDefault();
 
@@ -55,9 +57,9 @@ export async function handleRegisterSubmit(
         batch,
         price,
         certifications,
-        user.legal_name,
-        "N/A",
-        "N/A"
+        manufacturer,
+        distributor,
+        retailer
       )
       .send({ from: accounts[0] })
       .on("receipt", (receipt: any) => {
@@ -130,7 +132,9 @@ export default function Manufacturer() {
               contract,
               setProductId,
               qrDialogRef,
-              user
+              user.legal_name,
+              "N/A",
+              "N/A"
             )
           }
           onClick={(ev) => {

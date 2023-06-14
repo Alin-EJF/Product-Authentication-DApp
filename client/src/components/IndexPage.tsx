@@ -127,7 +127,14 @@ export default function IndexPage() {
                     <div className="key" style={{ color: "white" }}>
                       <strong>{key}:</strong>
                     </div>
-                    <div className="value" style={{ color: "limegreen" }}>
+                    <div
+                      className="value"
+                      style={{
+                        color: "limegreen",
+                        wordWrap: "break-word",
+                        maxWidth: "400px",
+                      }}
+                    >
                       {Array.isArray(value) ? value.join(", ") : value}
                     </div>
                   </div>

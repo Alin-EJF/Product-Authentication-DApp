@@ -42,7 +42,9 @@ export async function handleUpdate(
   productId: any,
   geoLocation: any,
   dialogRef: any,
-  qrDialogRef: any
+  qrDialogRef: any,
+  distributor: any,
+  retailer: any
 ) {
   e.preventDefault();
 
@@ -62,7 +64,14 @@ export async function handleUpdate(
     const accounts = await web3.eth.getAccounts();
 
     await contract.methods
-      .updateProduct(productId, geoLocation, price, certifications)
+      .updateProduct(
+        productId,
+        geoLocation,
+        price,
+        certifications,
+        distributor,
+        retailer
+      )
       .send({ from: accounts[0] })
       .on("receipt", (receipt: any) => {
         console.log("Product updated");
@@ -146,7 +155,9 @@ export default function Retailer() {
               productId,
               geoLocation,
               dialogRef,
-              qrDialogRef
+              qrDialogRef,
+              "",
+              user.legal_name
             )
           }
           onClick={(ev) => {

@@ -107,7 +107,9 @@ export default function Distributor() {
               productId,
               geoLocation,
               updateDialogRef,
-              qrDialogRef
+              qrDialogRef,
+              user.legal_name,
+              ""
             )
           }
         >
@@ -137,7 +139,16 @@ export default function Distributor() {
           title="Add product details"
           dialogRef={registerDialogRef}
           onSubmit={(ev) =>
-            handleRegisterSubmit(ev, web3, contract, setProductId)
+            handleRegisterSubmit(
+              ev,
+              web3,
+              contract,
+              setProductId,
+              qrDialogRef,
+              user.legal_name,
+              user.legal_name,
+              "N/A"
+            )
           }
         >
           <input name="productName" placeholder="Product name  *" />
