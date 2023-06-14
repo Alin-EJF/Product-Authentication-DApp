@@ -106,9 +106,14 @@ export default function Retailer() {
       <div className="content-container">
         <h1 className="main-header">Update Product</h1>
         <h3 className="sub-header">
-          Keep information about an existing product up to date
+          Maintain accurate details of an existing product by updating the
+          information about its location, the current owner, and the date of
+          ownership.
         </h3>
-
+        <h3 className="sub-header">
+          You may also optionally adjust the current price and update its
+          certificates, if applicable.
+        </h3>
         <form
           onSubmit={(e) => handleClick(e, web3, contract, productId, dialogRef)}
           style={{

@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
-import { FaAlignJustify, FaHome, FaIdBadge } from "react-icons/fa";
+import { FaHome, FaIdBadge } from "react-icons/fa";
 
 export default function Header() {
   const { user } = useContext(UserContext);
@@ -28,6 +28,9 @@ export default function Header() {
               </Link>
               <Link to={"/retailer"} className="header_link">
                 Retailer
+              </Link>
+              <Link to={"/about"} className="header_link">
+                About
               </Link>
             </>
           )}

@@ -22,7 +22,9 @@ export async function handleRegisterSubmit(
   e: React.FormEvent,
   web3: any,
   contract: any,
-  setProductId: any
+  setProductId: any,
+  qrDialogRef: any,
+  user: any
 ) {
   e.preventDefault();
 
@@ -52,7 +54,10 @@ export async function handleRegisterSubmit(
         geoLocation,
         batch,
         price,
-        certifications
+        certifications,
+        user.legal_name,
+        "N/A",
+        "N/A"
       )
       .send({ from: accounts[0] })
       .on("receipt", (receipt: any) => {
@@ -63,9 +68,10 @@ export async function handleRegisterSubmit(
         let productId = receipt.events.ProductRegistered.returnValues[0];
         console.log("Product Id is: ", productId);
         setProductId(productId);
+        qrDialogRef.current.showModal();
 
         // Send productId to backend to be written to NFC
-        writeNfc(productId);
+        //writeNfc(productId);
       })
       .on("error", (error: any) => {
         console.error(error);
@@ -88,10 +94,10 @@ export async function handleRegisterSubmit(
 }
 
 export default function Manufacturer() {
-  const { user } = useContext(UserContext);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const qrDialogRef = useRef<HTMLDialogElement>(null);
   const geoLocation = useGeolocation();
+  const { user } = useContext(UserContext);
 
   const [productId, setProductId] = useState(null);
 
@@ -118,7 +124,14 @@ export default function Manufacturer() {
         <dialog
           ref={dialogRef}
           onSubmit={(ev) =>
-            handleRegisterSubmit(ev, web3, contract, setProductId)
+            handleRegisterSubmit(
+              ev,
+              web3,
+              contract,
+              setProductId,
+              qrDialogRef,
+              user
+            )
           }
           onClick={(ev) => {
             const target = ev.target as HTMLDialogElement;
@@ -141,8 +154,12 @@ export default function Manufacturer() {
               <FaTimes />
             </button>
             <h2 className="h2provider"> Add product details</h2>
-            <h6 className="h2provider italic-text">
-              fields marked with '*'' are compulsory
+            <h6 className="h2provider">
+              fields marked with ' * ', are compulsory
+            </h6>
+            <h6 style={{ marginLeft: "7%" }} className="h2provider italic-text">
+              location, company name, ownership and date are automatically
+              extracted
             </h6>
             <input name="productName" placeholder="Product name  *" />
             <input
@@ -170,7 +187,7 @@ export default function Manufacturer() {
               <QRCode
                 style={{ marginBottom: "7%", marginTop: "7%" }}
                 value={productId}
-                size={250}
+                size={350}
               />
             )}
             <button onClick={() => qrDialogRef?.current?.close()}>Close</button>

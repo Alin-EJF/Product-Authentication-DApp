@@ -8,6 +8,7 @@ import {
   Manufacturer,
   Distributor,
   Retailer,
+  About,
 } from "./components";
 import Layout from "./Layout";
 import axios from "axios";
@@ -28,6 +29,7 @@ function App() {
           <Route path="/manufacturer" element={<Manufacturer />} />
           <Route path="/distributor" element={<Distributor />} />
           <Route path="/retailer" element={<Retailer />} />
+          <Route path="/about" element={<About />} />
         </Route>
       </Routes>
     </UserContextProvider>

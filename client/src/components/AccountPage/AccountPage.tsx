@@ -1,5 +1,4 @@
 import { useContext, useEffect } from "react";
-import styles from "./AccountPage.module.css";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -49,18 +48,18 @@ export default function AccountPage() {
                   value={user?.CIF || ""}
                   readOnly={true}
                 />
-                <label>Numar registru:</label>
+                <label>Trade registration number:</label>
                 <input
                   type="text"
                   className="input-field"
-                  value={user?.numar_registru || ""}
+                  value={user?.trade_register_number || ""}
                   readOnly={true}
                 />
-                <label>Denumire legala:</label>
+                <label>Legal name:</label>
                 <input
                   type="text"
                   className="input-field"
-                  value={user?.denumire_legala || ""}
+                  value={user?.legal_name || ""}
                   readOnly={true}
                 />
                 <label>Phone Number:</label>

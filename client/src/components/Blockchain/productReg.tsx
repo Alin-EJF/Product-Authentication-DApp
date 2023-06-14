@@ -1,4 +1,4 @@
-export const contractAddress = "0x6f10CC56Ca0eF73D56c131ECF130d70C4536B890";
+export const contractAddress = "0xf5A9A483d1Ff407140Ca22C051cBfE16fF2F8F59";
 
 export const contractAbi = [
   {
@@ -168,18 +168,28 @@ export const contractAbi = [
       },
       {
         internalType: "string",
-        name: "geoLocation",
-        type: "string",
-      },
-      {
-        internalType: "string",
         name: "batch",
         type: "string",
       },
       {
-        internalType: "uint256",
-        name: "price",
-        type: "uint256",
+        internalType: "string",
+        name: "manufacturer",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "distributor",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "retailer",
+        type: "string",
+      },
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
       },
       {
         internalType: "bool",
@@ -224,6 +234,21 @@ export const contractAbi = [
         name: "certifications",
         type: "string[]",
       },
+      {
+        internalType: "string",
+        name: "manufacturer",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "distributor",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "retailer",
+        type: "string",
+      },
     ],
     name: "registerProduct",
     outputs: [],
@@ -254,8 +279,38 @@ export const contractAbi = [
         name: "certifications",
         type: "string[]",
       },
+      {
+        internalType: "string",
+        name: "distributor",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "retailer",
+        type: "string",
+      },
     ],
     name: "updateProduct",
+    outputs: [],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    constant: false,
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "id",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "addOwner",
     outputs: [],
     payable: false,
     stateMutability: "nonpayable",
@@ -295,9 +350,9 @@ export const contractAbi = [
             type: "uint256",
           },
           {
-            internalType: "string",
-            name: "geoLocation",
-            type: "string",
+            internalType: "string[]",
+            name: "geoLocations",
+            type: "string[]",
           },
           {
             internalType: "string",
@@ -305,14 +360,34 @@ export const contractAbi = [
             type: "string",
           },
           {
-            internalType: "uint256",
-            name: "price",
-            type: "uint256",
+            internalType: "uint256[]",
+            name: "prices",
+            type: "uint256[]",
           },
           {
             internalType: "string[]",
             name: "certifications",
             type: "string[]",
+          },
+          {
+            internalType: "string",
+            name: "manufacturer",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "distributor",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "retailer",
+            type: "string",
+          },
+          {
+            internalType: "address",
+            name: "owner",
+            type: "address",
           },
           {
             internalType: "bool",

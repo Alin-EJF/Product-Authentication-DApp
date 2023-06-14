@@ -61,7 +61,7 @@ export default function RegisterPage() {
             className={userType === 1 ? styles.active : ""}
             onClick={() => setUserType(1)}
           >
-            Register as User
+            Register as Consumer
           </button>
           <button
             className={userType === 2 ? styles.active : ""}

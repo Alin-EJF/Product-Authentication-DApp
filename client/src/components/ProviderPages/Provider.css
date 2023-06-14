@@ -19,8 +19,8 @@ dialog{
 
   .italic-text {
     font-style: italic;
-    margin-bottom: 9%;
     color: #ffffffe1;
+    padding-bottom: 6%;
   }
   
   @keyframes fadeIn {
@@ -38,7 +38,9 @@ dialog{
 
 
 .product-details {
-  display: grid;
+  display: flex;
+  align-items: start;
+  flex-direction: column;
   padding-bottom: 15%;
   padding-top: 5%;
 }
@@ -46,9 +48,9 @@ dialog{
 .key-value-container {
   display: grid;
   grid-template-columns: min-content auto;
-  align-items: start;
-  grid-gap: 10px;
-  padding-bottom:2% ;
+  align-items: end;
+  grid-gap: 25px;
+  padding-bottom:3% ;
 }
 
 

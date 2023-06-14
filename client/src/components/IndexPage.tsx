@@ -12,8 +12,12 @@ type ProductData = {
   "Date of registration": number;
   "Location of registration": string;
   Batch: string;
-  Price: number;
+  "Price history": number[];
   "Certification/s": string[];
+  Manufacturer: string;
+  Distributor: string;
+  Retailer: string;
+  "Owner/s": string[];
 } | null;
 
 export default function IndexPage() {
@@ -46,8 +50,12 @@ export default function IndexPage() {
         "Date of registration": new Date(product[3] * 1000).toLocaleString(),
         "Location of registration": product[4],
         Batch: product[5],
-        Price: product[6],
+        "Price history": product[6], // Now an array
         "Certification/s": product[7],
+        Manufacturer: product[8],
+        Distributor: product[9],
+        Retailer: product[10],
+        "Owner/s addresses": product[11],
       };
       setProduct(productMapped);
       toast.success("Product Found in the blockchain");
@@ -120,7 +128,7 @@ export default function IndexPage() {
                       <strong>{key}:</strong>
                     </div>
                     <div className="value" style={{ color: "limegreen" }}>
-                      {value}
+                      {Array.isArray(value) ? value.join(", ") : value}
                     </div>
                   </div>
                 ))}

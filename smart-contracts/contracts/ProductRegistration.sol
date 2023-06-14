@@ -9,10 +9,14 @@ contract ProductRegistration {
         string productName;
         string productDescription;
         uint256 dateOfRegistration;
-        string geoLocation;
+        string[] geoLocations;
         string batch;
-        uint256 price;
+        uint256[] prices;
         string[] certifications;
+        string manufacturer;
+        string distributor;
+        string retailer;
+        address owner;
         bool isRegistered;
     }
 
@@ -50,7 +54,10 @@ contract ProductRegistration {
             "Location1",
             "Batch1",
             100,
-            certifications1
+            certifications1,
+            "Manufacturer1",
+            "Distributor1",
+            "Retailer1"
         );
 
         string[] memory certifications2 = new string[](2);
@@ -63,7 +70,10 @@ contract ProductRegistration {
             "Location2",
             "Batch2",
             200,
-            certifications2
+            certifications2,
+            "Manufacturer2",
+            "Distributor2",
+            "Retailer2"
         );
     }
 
@@ -73,9 +83,13 @@ contract ProductRegistration {
         string memory geoLocation,
         string memory batch,
         uint256 price,
-        string[] memory certifications
+        string[] memory certifications,
+        string memory manufacturer,
+        string memory distributor,
+        string memory retailer
     ) public {
         require(bytes(productName).length > 0, "Product name is required");
+        require(bytes(manufacturer).length > 0, "Manufacturer is required");
         require(
             bytes(productDescription).length > 0,
             "Product description is required"
@@ -83,15 +97,26 @@ contract ProductRegistration {
         require(bytes(batch).length > 0, "Batch is required");
 
         productCount++;
+
+        string[] memory geoLocations = new string[](1);
+        geoLocations[0] = geoLocation;
+
+        uint256[] memory prices = new uint256[](1);
+        prices[0] = price;
+
         products[productCount] = Product(
             productCount,
             productName,
             productDescription,
             block.timestamp,
-            geoLocation,
+            geoLocations,
             batch,
-            price,
+            prices,
             certifications,
+            manufacturer,
+            distributor,
+            retailer,
+            msg.sender, // set the owner to be the address from which the contract is called
             true
         );
         emit ProductRegistered(
@@ -110,14 +135,22 @@ contract ProductRegistration {
         uint256 id,
         string memory geoLocation,
         uint256 price,
-        string[] memory certifications
+        string[] memory certifications,
+        string memory distributor,
+        string memory retailer
     ) public {
         require(products[id].isRegistered, "Product not found");
 
-        products[id].geoLocation = geoLocation;
+        products[id].geoLocations.push(geoLocation);
         products[id].dateOfRegistration = block.timestamp;
+        if (bytes(distributor).length > 0) {
+            products[id].distributor = distributor;
+        }
+        if (bytes(retailer).length > 0) {
+            products[id].retailer = retailer;
+        }
         if (price > 0) {
-            products[id].price = price;
+            products[id].prices.push(price);
         }
 
         // append new certifications
@@ -129,11 +162,16 @@ contract ProductRegistration {
 
         emit ProductUpdated(
             id,
-            geoLocation,
+            geoLocation, // It should take the last inserted geoLocation
             block.timestamp,
-            price,
+            price, // It should take the last inserted price
             msg.sender
         );
+    }
+
+    function addOwner(uint256 id, address newOwner) public {
+        require(products[id].isRegistered, "Product not found");
+        products[id].owner = newOwner;
     }
 
     function getProduct(uint256 id) public view returns (Product memory) {

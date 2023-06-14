@@ -37,7 +37,7 @@ function DialogForm({ title, children, dialogRef, onSubmit }) {
         </button>
         <h2 className="h2provider"> {title} </h2>
         <h6 className="h2provider italic-text">
-          fields marked with '*' are compulsory
+          * Location, ownership and date are extracted automatically
         </h6>
         {children}
       </form>
@@ -63,7 +63,13 @@ export default function Distributor() {
       <div className="content-container">
         <h1 className="main-header">Update Product</h1>
         <h3 className="sub-header">
-          Keep information about an existing product up to date
+          Maintain accurate details of an existing product by updating the
+          information about its location, the current owner, and the date of
+          ownership.
+        </h3>
+        <h3 className="sub-header">
+          You may also optionally adjust the current price and update its
+          certificates, if applicable.
         </h3>
 
         <form
@@ -121,6 +127,7 @@ export default function Distributor() {
 
         <button
           className="generic-button"
+          style={{ marginBottom: "20%" }}
           onClick={() => registerDialogRef?.current?.showModal()}
         >
           Add product
