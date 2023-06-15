@@ -1,4 +1,4 @@
-export const contractAddress = "0xf5A9A483d1Ff407140Ca22C051cBfE16fF2F8F59";
+export const contractAddress = "0x5760eFb2b035c68D574851133A2722A512058ca8";
 
 export const contractAbi = [
   {
@@ -37,7 +37,7 @@ export const contractAbi = [
       {
         indexed: false,
         internalType: "string",
-        name: "geoLocation",
+        name: "locationOfRegistration",
         type: "string",
       },
       {
@@ -54,9 +54,9 @@ export const contractAbi = [
       },
       {
         indexed: false,
-        internalType: "string[]",
-        name: "certifications",
-        type: "string[]",
+        internalType: "string",
+        name: "certification",
+        type: "string",
       },
     ],
     name: "ProductRegistered",
@@ -74,14 +74,8 @@ export const contractAbi = [
       {
         indexed: false,
         internalType: "string",
-        name: "geoLocation",
+        name: "locationOfUpdate",
         type: "string",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "dateOfRegistration",
-        type: "uint256",
       },
       {
         indexed: false,
@@ -91,9 +85,21 @@ export const contractAbi = [
       },
       {
         indexed: false,
+        internalType: "string",
+        name: "certification",
+        type: "string",
+      },
+      {
+        indexed: false,
         internalType: "address",
         name: "updatedBy",
         type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "dateOfUpdate",
+        type: "uint256",
       },
     ],
     name: "ProductUpdated",
@@ -167,6 +173,11 @@ export const contractAbi = [
         type: "uint256",
       },
       {
+        internalType: "uint256",
+        name: "dateOfUpdate",
+        type: "uint256",
+      },
+      {
         internalType: "string",
         name: "batch",
         type: "string",
@@ -185,11 +196,6 @@ export const contractAbi = [
         internalType: "string",
         name: "retailer",
         type: "string",
-      },
-      {
-        internalType: "address",
-        name: "owner",
-        type: "address",
       },
       {
         internalType: "bool",
@@ -216,7 +222,7 @@ export const contractAbi = [
       },
       {
         internalType: "string",
-        name: "geoLocation",
+        name: "locationOfRegistration",
         type: "string",
       },
       {
@@ -230,9 +236,9 @@ export const contractAbi = [
         type: "uint256",
       },
       {
-        internalType: "string[]",
-        name: "certifications",
-        type: "string[]",
+        internalType: "string",
+        name: "certification",
+        type: "string",
       },
       {
         internalType: "string",
@@ -266,7 +272,7 @@ export const contractAbi = [
       },
       {
         internalType: "string",
-        name: "geoLocation",
+        name: "locationOfUpdate",
         type: "string",
       },
       {
@@ -275,9 +281,9 @@ export const contractAbi = [
         type: "uint256",
       },
       {
-        internalType: "string[]",
-        name: "certifications",
-        type: "string[]",
+        internalType: "string",
+        name: "certification",
+        type: "string",
       },
       {
         internalType: "string",
@@ -303,11 +309,6 @@ export const contractAbi = [
         internalType: "uint256",
         name: "id",
         type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
       },
     ],
     name: "addOwner",
@@ -351,8 +352,18 @@ export const contractAbi = [
           },
           {
             internalType: "string[]",
-            name: "geoLocations",
+            name: "locationOfRegistration",
             type: "string[]",
+          },
+          {
+            internalType: "string[]",
+            name: "locationsOfUpdates",
+            type: "string[]",
+          },
+          {
+            internalType: "uint256",
+            name: "dateOfUpdate",
+            type: "uint256",
           },
           {
             internalType: "string",
@@ -385,9 +396,9 @@ export const contractAbi = [
             type: "string",
           },
           {
-            internalType: "address",
-            name: "owner",
-            type: "address",
+            internalType: "address[]",
+            name: "owners",
+            type: "address[]",
           },
           {
             internalType: "bool",

@@ -11,6 +11,8 @@ type ProductData = {
   Description: string;
   "Date of registration": number;
   "Location of registration": string;
+  "Locations of updates": string[];
+  "Date of update": number;
   Batch: string;
   "Price history": number[];
   "Certification/s": string[];
@@ -49,19 +51,40 @@ export default function IndexPage() {
         Description: product[2],
         "Date of registration": new Date(product[3] * 1000).toLocaleString(),
         "Location of registration": product[4],
-        Batch: product[5],
-        "Price history": product[6], // Now an array
-        "Certification/s": product[7],
-        Manufacturer: product[8],
-        Distributor: product[9],
-        Retailer: product[10],
-        "Owner/s addresses": product[11],
+        "Locations of updates": product[5].length > 0 ? product[5] : null,
+        "Date of update":
+          product[6] > 0 ? new Date(product[6] * 1000).toLocaleString() : null,
+        Batch: product[7],
+        "Price history": product[8],
+        "Certification/s": product[9],
+        Manufacturer: product[10],
+        Distributor: product[11],
+        Retailer: product[12],
+        "Owner/s addresses": product[13],
       };
       setProduct(productMapped);
       toast.success("Product Found in the blockchain");
       dialogRef?.current?.showModal();
     } catch (error) {
       toast.error("Product not found in the blockchain");
+    }
+  };
+
+  const handleAddOwner = async () => {
+    if (!web3 || !contract) {
+      alert(
+        "Web3 or the contract is not initialized. Please check MetaMask connection."
+      );
+      return;
+    }
+
+    try {
+      const accounts = await web3.eth.getAccounts();
+
+      await contract.methods.addOwner(productId).send({ from: accounts[0] });
+      toast.success("Successfully added as an owner");
+    } catch (error) {
+      toast.error("An error occurred while adding as an owner");
     }
   };
 
@@ -122,23 +145,25 @@ export default function IndexPage() {
             <h2 className="h2provider">Product details</h2>
             <div className="product-details">
               {product &&
-                Object.entries(product).map(([key, value]) => (
-                  <div key={key} className="key-value-container">
-                    <div className="key" style={{ color: "white" }}>
-                      <strong>{key}:</strong>
+                Object.entries(product).map(([key, value]) =>
+                  value !== null ? (
+                    <div key={key} className="key-value-container">
+                      <div className="key" style={{ color: "white" }}>
+                        <strong>{key}:</strong>
+                      </div>
+                      <div
+                        className="value"
+                        style={{
+                          color: "limegreen",
+                          wordWrap: "break-word",
+                          maxWidth: "400px",
+                        }}
+                      >
+                        {Array.isArray(value) ? value.join(", ") : value}
+                      </div>
                     </div>
-                    <div
-                      className="value"
-                      style={{
-                        color: "limegreen",
-                        wordWrap: "break-word",
-                        maxWidth: "400px",
-                      }}
-                    >
-                      {Array.isArray(value) ? value.join(", ") : value}
-                    </div>
-                  </div>
-                ))}
+                  ) : null
+                )}
             </div>
 
             {user?.userType === 1 && (
@@ -146,8 +171,9 @@ export default function IndexPage() {
                 className="submit-button"
                 formMethod="dialog"
                 value="submit"
+                onClick={handleAddOwner}
               >
-                Add owner
+                Add me as owner
               </button>
             )}
           </form>

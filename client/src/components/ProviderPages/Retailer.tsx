@@ -58,8 +58,7 @@ export async function handleUpdate(
 
   try {
     const price = Number(formData.get("price") || 0);
-    const certifications =
-      formData.get("certifications")?.toString().split(",") || [];
+    const certification = formData.get("certifications")?.toString() || "";
 
     const accounts = await web3.eth.getAccounts();
 
@@ -68,7 +67,7 @@ export async function handleUpdate(
         productId,
         geoLocation,
         price,
-        certifications,
+        certification,
         distributor,
         retailer
       )

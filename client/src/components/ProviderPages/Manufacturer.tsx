@@ -44,8 +44,7 @@ export async function handleRegisterSubmit(
     const geoLocation = formData.get("geoLocation")?.toString() || "";
     const batch = formData.get("batch")?.toString() || "";
     const price = Number(formData.get("price") || 0);
-    const certifications =
-      formData.get("certifications")?.toString().split(",") || [];
+    const certification = formData.get("certifications")?.toString() || "";
 
     const accounts = await web3.eth.getAccounts();
 
@@ -56,7 +55,7 @@ export async function handleRegisterSubmit(
         geoLocation,
         batch,
         price,
-        certifications,
+        certification,
         manufacturer,
         distributor,
         retailer
