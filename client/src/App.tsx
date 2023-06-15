@@ -30,6 +30,7 @@ function App() {
           <Route path="/distributor" element={<Distributor />} />
           <Route path="/retailer" element={<Retailer />} />
           <Route path="/about" element={<About />} />
+          <Route path="/requestId/:id" element={<IndexPage />} />
         </Route>
       </Routes>
     </UserContextProvider>

@@ -1,9 +1,10 @@
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import { UserContext } from "../UserContext";
 import { FaSearch, FaTimes, FaQrcode } from "react-icons/fa";
 import { contractAbi, contractAddress } from "./Blockchain/productReg";
 import { ToastContainer, toast } from "react-toastify";
 import { useWeb3 } from "./Blockchain/useWeb3";
+import { useNavigate, useParams } from "react-router-dom";
 
 type ProductData = {
   id: string;
@@ -30,45 +31,47 @@ export default function IndexPage() {
 
   const { web3, contract } = useWeb3(contractAbi, contractAddress);
 
-  const handleClick: React.FormEventHandler<HTMLFormElement> = async (
-    e: React.FormEvent
-  ) => {
-    e.preventDefault();
+  const navigate = useNavigate();
+  const params = useParams();
 
-    if (!web3 || !contract) {
-      alert(
-        "Web3 or the contract is not initialized. Please check MetaMask connection."
-      );
-      return;
+  useEffect(() => {
+    if (params.id && web3 && contract) {
+      (async () => {
+        try {
+          const product = await contract.methods.getProduct(params.id).call();
+
+          const productMapped = {
+            id: product[0],
+            Name: product[1],
+            Description: product[2],
+            "Date of registration": new Date(
+              product[3] * 1000
+            ).toLocaleString(),
+            "Location of registration": product[4],
+            "Locations of updates": product[5].length > 0 ? product[5] : null,
+            "Date of update":
+              product[6] > 0
+                ? new Date(product[6] * 1000).toLocaleString()
+                : null,
+            Batch: product[7],
+            "Price history": product[8],
+            "Certification/s": product[9],
+            Manufacturer: product[10],
+            Distributor: product[11],
+            Retailer: product[12],
+            "Owner/s addresses": product[13],
+          };
+
+          setProduct(productMapped);
+          toast.success("Product Found in the blockchain");
+          dialogRef?.current?.showModal();
+        } catch (error) {
+          toast.error("Product not found in the blockchain");
+          navigate("/");
+        }
+      })();
     }
-
-    try {
-      const product = await contract.methods.getProduct(productId).call();
-
-      const productMapped = {
-        id: product[0],
-        Name: product[1],
-        Description: product[2],
-        "Date of registration": new Date(product[3] * 1000).toLocaleString(),
-        "Location of registration": product[4],
-        "Locations of updates": product[5].length > 0 ? product[5] : null,
-        "Date of update":
-          product[6] > 0 ? new Date(product[6] * 1000).toLocaleString() : null,
-        Batch: product[7],
-        "Price history": product[8],
-        "Certification/s": product[9],
-        Manufacturer: product[10],
-        Distributor: product[11],
-        Retailer: product[12],
-        "Owner/s addresses": product[13],
-      };
-      setProduct(productMapped);
-      toast.success("Product Found in the blockchain");
-      dialogRef?.current?.showModal();
-    } catch (error) {
-      toast.error("Product not found in the blockchain");
-    }
-  };
+  }, [params.id, web3, contract, navigate]);
 
   const handleAddOwner = async () => {
     if (!web3 || !contract) {
@@ -99,7 +102,7 @@ export default function IndexPage() {
         </h1>
         <h2 className="sub-header">Type ID or scan QR code</h2>
         <form
-          onSubmit={handleClick}
+          onSubmit={(e) => e.preventDefault()}
           style={{
             display: "flex",
             justifyContent: "center",
