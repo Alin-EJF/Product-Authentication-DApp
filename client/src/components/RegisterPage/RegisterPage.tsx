@@ -15,6 +15,10 @@ export default function RegisterPage() {
   const [legalNameOfTheCompany, setLegalNameOfTheCompany] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [isManufacturer, setIsManufacturer] = useState(false);
+  const [isDistributor, setIsDistributor] = useState(false);
+  const [isRetailer, setIsRetailer] = useState(false);
+
   const navigate = useNavigate();
 
   const fileSelectHandler = (event: any) => {
@@ -157,6 +161,34 @@ export default function RegisterPage() {
                 required
               />
               {selectedFile && <p>File selected: {selectedFile}</p>}
+
+              <label>
+                <input
+                  type="checkbox"
+                  id="Manufacturer"
+                  className="input-checkbox"
+                  onChange={(e) => setIsManufacturer(e.target.checked)}
+                />
+                <span style={{ marginLeft: "10px" }}>Manufacturer</span>
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  id="Distributor"
+                  className="input-checkbox"
+                  onChange={(e) => setIsDistributor(e.target.checked)}
+                />
+                <span style={{ marginLeft: "10px" }}>Distributor</span>
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  id="Retailer"
+                  className="input-checkbox"
+                  onChange={(e) => setIsRetailer(e.target.checked)}
+                />
+                <span style={{ marginLeft: "10px" }}>Retailer</span>
+              </label>
             </>
           )}
           <button className="generic-button" type="submit">

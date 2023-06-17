@@ -6,7 +6,7 @@
 
 dialog{
   min-width: 40%;
-  width: 65%;
+  width: 45%;
   background-color: #1a1919;
   justify-content: left;
   left: 50%;
@@ -47,6 +47,7 @@ align-items: start;
 flex-direction: column;
 padding-bottom: 15%;
 padding-top: 5%;
+padding-left: 2%;
 }
 
 .key-value-container {

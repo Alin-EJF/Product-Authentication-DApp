@@ -18,6 +18,7 @@ export default function Header() {
               }}
             />
           </Link>
+
           {user?.userType === 2 && (
             <>
               <Link to={"/manufacturer"} className="header_link">
@@ -29,12 +30,14 @@ export default function Header() {
               <Link to={"/retailer"} className="header_link">
                 Retailer
               </Link>
-              <Link to={"/about"} className="header_link">
-                About
-              </Link>
             </>
           )}
+
+          <Link to={"/about"} className="header_link">
+            About
+          </Link>
         </div>
+
         <Link to={user ? "/account" : "/login"} className="generic-button">
           {(!!user && (
             <div style={{ display: "flex", alignItems: "center" }}>
