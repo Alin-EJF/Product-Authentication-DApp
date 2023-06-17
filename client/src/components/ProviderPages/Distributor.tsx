@@ -103,11 +103,10 @@ export default function Distributor() {
             handleUpdate(
               e,
               web3,
+              updateDialogRef,
               contract,
               productId,
               geoLocation,
-              updateDialogRef,
-              qrDialogRef,
               user.legal_name,
               ""
             )
@@ -165,7 +164,11 @@ export default function Distributor() {
           </button>
         </DialogForm>
 
-        <dialog ref={qrDialogRef} onClose={() => qrDialogRef?.current?.close()}>
+        <dialog
+          className="qrDialog"
+          ref={qrDialogRef}
+          onClose={() => qrDialogRef?.current?.close()}
+        >
           <div className="form-container">
             <h2 className="h2provider">Product Id from blockchain</h2>
             {productId && (

@@ -34,44 +34,49 @@ export default function IndexPage() {
   const navigate = useNavigate();
   const params = useParams();
 
+  const fetchProductData = async (id: string) => {
+    try {
+      const product = await contract.methods.getProduct(id).call();
+
+      const productMapped = {
+        id: product[0],
+        Name: product[1],
+        Description: product[2],
+        "Date of registration": new Date(product[3] * 1000).toLocaleString(),
+        "Location of registration": product[4],
+        "Locations of updates": product[5].length > 0 ? product[5] : null,
+        "Date of update":
+          product[6] > 0 ? new Date(product[6] * 1000).toLocaleString() : null,
+        Batch: product[7],
+        "Price history": product[8],
+        "Certification/s": product[9],
+        Manufacturer: product[10],
+        Distributor: product[11],
+        Retailer: product[12],
+        "Owner/s addresses": product[13],
+      };
+
+      setProduct(productMapped);
+      toast.success("Product Found in the blockchain");
+      dialogRef?.current?.showModal();
+    } catch (error) {
+      toast.error("Product not found in the blockchain");
+      navigate("/");
+    }
+  };
+
   useEffect(() => {
     if (params.id && web3 && contract) {
-      (async () => {
-        try {
-          const product = await contract.methods.getProduct(params.id).call();
-
-          const productMapped = {
-            id: product[0],
-            Name: product[1],
-            Description: product[2],
-            "Date of registration": new Date(
-              product[3] * 1000
-            ).toLocaleString(),
-            "Location of registration": product[4],
-            "Locations of updates": product[5].length > 0 ? product[5] : null,
-            "Date of update":
-              product[6] > 0
-                ? new Date(product[6] * 1000).toLocaleString()
-                : null,
-            Batch: product[7],
-            "Price history": product[8],
-            "Certification/s": product[9],
-            Manufacturer: product[10],
-            Distributor: product[11],
-            Retailer: product[12],
-            "Owner/s addresses": product[13],
-          };
-
-          setProduct(productMapped);
-          toast.success("Product Found in the blockchain");
-          dialogRef?.current?.showModal();
-        } catch (error) {
-          toast.error("Product not found in the blockchain");
-          navigate("/");
-        }
-      })();
+      fetchProductData(params.id);
     }
   }, [params.id, web3, contract, navigate]);
+
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (web3 && contract) {
+      fetchProductData(productId);
+    }
+  };
 
   const handleAddOwner = async () => {
     if (!web3 || !contract) {
@@ -102,7 +107,7 @@ export default function IndexPage() {
         </h1>
         <h2 className="sub-header">Type ID or scan QR code</h2>
         <form
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={handleSearch}
           style={{
             display: "flex",
             justifyContent: "center",

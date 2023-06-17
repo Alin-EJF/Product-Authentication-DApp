@@ -66,9 +66,9 @@ export async function handleRegisterSubmit(
         toast.success("Product registered in the blockchain");
 
         // Extract the id
-        let productId = receipt.events.ProductRegistered.returnValues[0];
-        console.log("Product Id is: ", productId);
-        setProductId(productId);
+        let Id = receipt.events.ProductRegistered.returnValues[0];
+        console.log("Product Id is: ", Id);
+        setProductId(Id);
         qrDialogRef.current.showModal();
 
         // Send productId to backend to be written to NFC
@@ -183,7 +183,11 @@ export default function Manufacturer() {
           </form>
         </dialog>
 
-        <dialog ref={qrDialogRef} onClose={() => qrDialogRef?.current?.close()}>
+        <dialog
+          className="qrDialog"
+          ref={qrDialogRef}
+          onClose={() => qrDialogRef?.current?.close()}
+        >
           <div className="form-container">
             <h2 className="h2provider">Product Id from blockchain</h2>
             {productId && (

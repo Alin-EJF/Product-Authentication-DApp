@@ -6,7 +6,6 @@ import { ToastContainer, toast } from "react-toastify";
 import { useWeb3 } from "../Blockchain/useWeb3";
 import "./Provider.css";
 import { useGeolocation } from "./useGeolocation";
-import QRCode from "qrcode.react";
 
 export async function handleClick(
   e: React.FormEvent,
@@ -38,11 +37,10 @@ export async function handleClick(
 export async function handleUpdate(
   e: React.FormEvent,
   web3: any,
+  dialogRef: any,
   contract: any,
   productId: any,
   geoLocation: any,
-  dialogRef: any,
-  qrDialogRef: any,
   distributor: any,
   retailer: any
 ) {
@@ -76,7 +74,6 @@ export async function handleUpdate(
         console.log("Product updated");
         toast.success("Product updated in the blockchain");
         dialogRef?.current?.close();
-        qrDialogRef?.current?.showModal();
       })
       .on("error", (error: any) => {
         console.error(error);
@@ -100,7 +97,6 @@ export async function handleUpdate(
 export default function Retailer() {
   const { user } = useContext(UserContext);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const qrDialogRef = useRef<HTMLDialogElement>(null);
   const geoLocation = useGeolocation();
 
   const [productId, setProductId] = useState(null);
@@ -150,11 +146,10 @@ export default function Retailer() {
             handleUpdate(
               e,
               web3,
+              dialogRef,
               contract,
               productId,
               geoLocation,
-              dialogRef,
-              qrDialogRef,
               "",
               user.legal_name
             )
