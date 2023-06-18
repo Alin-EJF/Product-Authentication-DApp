@@ -9,6 +9,7 @@ import {
   Distributor,
   Retailer,
   About,
+  Admin,
 } from "./components";
 import Layout from "./Layout";
 import axios from "axios";
@@ -29,6 +30,7 @@ function App() {
           <Route path="/manufacturer" element={<Manufacturer />} />
           <Route path="/distributor" element={<Distributor />} />
           <Route path="/retailer" element={<Retailer />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="/about" element={<About />} />
           <Route path="/requestId/:id" element={<IndexPage />} />
         </Route>

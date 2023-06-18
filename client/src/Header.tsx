@@ -39,6 +39,12 @@ export default function Header() {
             </>
           )}
 
+          {user?.userType === 3 && (
+            <Link to={"/admin"} className="header_link">
+              Admin
+            </Link>
+          )}
+
           <Link to={"/about"} className="header_link">
             About
           </Link>

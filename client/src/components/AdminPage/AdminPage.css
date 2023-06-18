@@ -1,0 +1,40 @@
+.report-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background-color: #f8f8f8;
+}
+
+.report-container p {
+  margin: 5px 15px;
+  font-size: 16px;
+  color: #333;
+}
+
+.report-container button {
+    border-radius: 1px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 0.75em;
+    font-family: inherit;
+    background-color: #333;
+    cursor: pointer;
+    transition: border-color 0.25s;
+}
+
+.report-container button:hover {
+  background-color: #0056b3;
+}
+
+.sub-header {
+  margin-top: 25px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 22px;
+  color: #333;
+}

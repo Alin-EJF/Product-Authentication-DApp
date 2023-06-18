@@ -25,7 +25,7 @@ export const createReport = async (reportData: Report): Promise<Report | null> =
 };
 
 export const getLastReports = async (reportType: string): Promise<Report[] | null> => {
-  const query = 'SELECT * FROM reports WHERE "reportType" = $1 ORDER BY "created_at" DESC LIMIT 5';
+  const query = 'SELECT * FROM reports WHERE "report_type" = $1 ORDER BY "created_at" DESC LIMIT 5';
   const values = [reportType];
 
   try {

@@ -5,4 +5,5 @@ export { default as AccountPage } from "./AccountPage/AccountPage";
 export { default as Manufacturer } from "./ProviderPages/Manufacturer";
 export { default as Distributor } from "./ProviderPages/Distributor";
 export { default as Retailer } from "./ProviderPages/Retailer";
+export { default as Admin } from "./AdminPage/AdminPage";
 export { default as About } from "./About";
