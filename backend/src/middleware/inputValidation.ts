@@ -14,13 +14,12 @@ export const validateLoginInput = (req: Request, res: Response, next: NextFuncti
 
 
 export const validateRegistrationInput = (req: Request, res: Response, next: NextFunction): void => {
-  const { email, password, userType, CIF, trade_register_number, legal_name, phone_number } = req.body;
+  const { email, password, userType, CIF, trade_register_number, legal_name, phone_number, provider_types } = req.body;
 
   if (!email || !password || !userType) {
     res.status(400).json({ message: 'Email, password, and userType are required' });
   } else if(userType === 2) {
-    //as Provider
-    const provider: Provider = { email, password, userType, CIF, trade_register_number, legal_name, phone_number };
+    const provider: Provider = { email, password, userType, CIF, trade_register_number, legal_name, phone_number, provider_types };
     if (!validateProvider(provider)) {
       res.status(400).json({ message: 'Invalid provider data' });
       return;
@@ -50,7 +49,7 @@ const validateProvider = (provider: Provider): boolean => {
     provider.CIF !== undefined &&
     provider.trade_register_number !== undefined &&
     provider.legal_name !== undefined &&
-    provider.phone_number !== undefined
+    provider.phone_number !== undefined &&
+    provider.provider_types !== undefined 
   );
 };
-

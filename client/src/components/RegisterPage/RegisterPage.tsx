@@ -32,6 +32,11 @@ export default function RegisterPage() {
       return;
     }
 
+    let providerTypes = [];
+    if (isManufacturer) providerTypes.push("Manufacturer");
+    if (isDistributor) providerTypes.push("Distributor");
+    if (isRetailer) providerTypes.push("Retailer");
+
     axios
       .post("/auth/register", {
         email: email,
@@ -41,6 +46,7 @@ export default function RegisterPage() {
         trade_register_number: tradeRegisterNumber,
         legal_name: legalNameOfTheCompany,
         phone_number: phoneNumber,
+        provider_types: providerTypes,
       })
       .then((response) => {
         console.log(response.data);

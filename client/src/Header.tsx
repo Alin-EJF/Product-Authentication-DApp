@@ -19,17 +19,23 @@ export default function Header() {
             />
           </Link>
 
-          {user?.userType === 2 && (
+          {user?.userType === 2 && user.provider_types && (
             <>
-              <Link to={"/manufacturer"} className="header_link">
-                Manufacturer
-              </Link>
-              <Link to={"/distributor"} className="header_link">
-                Distributor
-              </Link>
-              <Link to={"/retailer"} className="header_link">
-                Retailer
-              </Link>
+              {user.provider_types.includes("Manufacturer") && (
+                <Link to={"/manufacturer"} className="header_link">
+                  Manufacturer
+                </Link>
+              )}
+              {user.provider_types.includes("Distributor") && (
+                <Link to={"/distributor"} className="header_link">
+                  Distributor
+                </Link>
+              )}
+              {user.provider_types.includes("Retailer") && (
+                <Link to={"/retailer"} className="header_link">
+                  Retailer
+                </Link>
+              )}
             </>
           )}
 

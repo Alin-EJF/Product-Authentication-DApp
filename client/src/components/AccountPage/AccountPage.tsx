@@ -28,10 +28,14 @@ export default function AccountPage() {
   return (
     <div className="content-container">
       <h1 className="main-header">Account Page</h1>
+      {user?.userType === 2 && user?.provider_types?.length > 0 && (
+        <h2 className="sub-header" style={{ marginBottom: "50px" }}>
+          Provider type: {user.provider_types.join(", ")}
+        </h2>
+      )}
       {ready ? (
         <>
           <form className="form-container">
-            {/*onSubmit={handleSubmit*/}
             <label>Email:</label>
             <input
               type="email"

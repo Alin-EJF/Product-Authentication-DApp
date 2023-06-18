@@ -5,6 +5,7 @@ import { contractAbi, contractAddress } from "./Blockchain/productReg";
 import { ToastContainer, toast } from "react-toastify";
 import { useWeb3 } from "./Blockchain/useWeb3";
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 type ProductData = {
   id: string;
@@ -28,6 +29,8 @@ export default function IndexPage() {
   const [productId, setProductId] = useState("");
   const [product, setProduct] = useState<ProductData>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const [reportDetails, setReportDetails] = useState("");
+  const reportDialogRef = useRef<HTMLDialogElement>(null);
 
   const { web3, contract } = useWeb3(contractAbi, contractAddress);
 
@@ -71,6 +74,10 @@ export default function IndexPage() {
     }
   }, [params.id, web3, contract, navigate]);
 
+  const handleReportProduct = () => {
+    reportDialogRef?.current?.showModal();
+  };
+
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (web3 && contract) {
@@ -94,6 +101,30 @@ export default function IndexPage() {
     } catch (error) {
       toast.error("An error occurred while adding as an owner");
     }
+  };
+
+  const submitReport = async () => {
+    if (!product) {
+      toast.error("No product data available to submit report.");
+      return;
+    }
+
+    try {
+      await axios.post("/auth/product-report", {
+        email: user?.email,
+        reportDetails: reportDetails,
+        reportType: "product-report",
+        productId: product.id,
+        productName: product.Name,
+        manufacturer: product.Manufacturer,
+      });
+
+      toast.success("Report successfully submitted");
+    } catch (error) {
+      toast.error("An error occurred while submitting the report");
+    }
+
+    reportDialogRef?.current?.close();
   };
 
   return (
@@ -175,15 +206,64 @@ export default function IndexPage() {
             </div>
 
             {user?.userType === 1 && (
-              <button
-                className="submit-button"
-                formMethod="dialog"
-                value="submit"
-                onClick={handleAddOwner}
-              >
-                Add me as owner
-              </button>
+              <>
+                <button
+                  className="submit-button"
+                  formMethod="dialog"
+                  value="submit"
+                  onClick={handleAddOwner}
+                >
+                  Add me as owner
+                </button>
+                <button
+                  className="submit-button"
+                  formMethod="dialog"
+                  value="submit"
+                  onClick={handleReportProduct}
+                >
+                  Report product
+                </button>
+              </>
             )}
+          </form>
+        </dialog>
+
+        <dialog
+          ref={reportDialogRef}
+          onClick={(ev) => {
+            const target = ev.target as HTMLDialogElement;
+            if (target.nodeName === "DIALOG") {
+              target.close();
+            }
+          }}
+          onClose={(ev) => {
+            const target = ev.target as HTMLDialogElement;
+            console.log(target.returnValue);
+          }}
+        >
+          <form method="dialog" className="form-container">
+            <button
+              className="cancel-button"
+              value="cancel"
+              onClick={() => reportDialogRef?.current?.close()}
+            >
+              <FaTimes />
+            </button>
+
+            <h2 className="h2provider">Add details about report</h2>
+            <textarea
+              style={{ width: "80%", height: "90px" }}
+              onChange={(e) => setReportDetails(e.target.value)}
+            />
+
+            <button
+              className="submit-button"
+              formMethod="dialog"
+              value="submit"
+              onClick={submitReport}
+            >
+              Submit Report
+            </button>
           </form>
         </dialog>
       </div>
