@@ -1,7 +1,7 @@
 import { useContext, useRef, useState } from "react";
 import axios from "axios";
 import { UserContext } from "../../UserContext";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaRssSquare } from "react-icons/fa";
 import { contractAbi, contractAddress } from "../Blockchain/productReg";
 import { ToastContainer, toast } from "react-toastify";
 import { useWeb3 } from "../Blockchain/useWeb3";
@@ -9,7 +9,7 @@ import "./Provider.css";
 import { useGeolocation } from "./useGeolocation";
 import QRCode from "qrcode.react";
 
-async function writeNfc(productId: string) {
+export async function writeNfc(productId: string) {
   try {
     const res = await axios.post("/auth/write-nfc", { productId });
     console.log("NFC write response: ", res.data);
@@ -105,14 +105,16 @@ export default function Manufacturer() {
   const abi = contractAbi;
   const { web3, contract } = useWeb3(abi, contractAddress);
 
+  const handleWriteNfc = (productId: string) => {
+    //writeNfc(productId);
+  };
   return (
     <div>
       <ToastContainer />
       <div className="content-container">
         <h1 className="main-header">Product Registration</h1>
         <h3 className="sub-header">
-          Add a new product, complete it's data and generate tracking
-          information
+          Add a new product, complete its data and generate tracking information
         </h3>
 
         <button
@@ -191,11 +193,19 @@ export default function Manufacturer() {
           <div className="form-container">
             <h2 className="h2provider">Product Id from blockchain</h2>
             {productId && (
-              <QRCode
-                style={{ marginBottom: "7%", marginTop: "7%" }}
-                value={productId}
-                size={350}
-              />
+              <>
+                <QRCode
+                  style={{ marginBottom: "7%", marginTop: "7%" }}
+                  value={productId}
+                  size={350}
+                />
+                <button
+                  style={{ marginBottom: "2%" }}
+                  onClick={() => handleWriteNfc(productId)}
+                >
+                  Write to NFC <FaRssSquare />
+                </button>
+              </>
             )}
             <button onClick={() => qrDialogRef?.current?.close()}>Close</button>
           </div>

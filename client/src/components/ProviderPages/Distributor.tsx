@@ -1,10 +1,10 @@
 import { useContext, useRef, useState } from "react";
 import { UserContext } from "../../UserContext";
-import { FaSearch, FaTimes, FaQrcode } from "react-icons/fa";
+import { FaSearch, FaTimes, FaQrcode, FaRssSquare } from "react-icons/fa";
 import { contractAbi, contractAddress } from "../Blockchain/productReg";
 import { ToastContainer } from "react-toastify";
 import { useWeb3 } from "../Blockchain/useWeb3";
-import { handleRegisterSubmit } from "./Manufacturer";
+import { handleRegisterSubmit, writeNfc } from "./Manufacturer";
 import { handleClick, handleUpdate } from "./Retailer";
 import "./Provider.css";
 import { useGeolocation } from "./useGeolocation";
@@ -56,6 +56,10 @@ export default function Distributor() {
 
   const abi = contractAbi;
   const { web3, contract } = useWeb3(abi, contractAddress);
+
+  const handleWriteNfc = (productId: string) => {
+    //writeNfc(productId);
+  };
 
   return (
     <div>
@@ -172,11 +176,19 @@ export default function Distributor() {
           <div className="form-container">
             <h2 className="h2provider">Product Id from blockchain</h2>
             {productId && (
-              <QRCode
-                style={{ marginBottom: "7%", marginTop: "7%" }}
-                value={productId}
-                size={250}
-              />
+              <>
+                <QRCode
+                  style={{ marginBottom: "7%", marginTop: "7%" }}
+                  value={productId}
+                  size={250}
+                />
+                <button
+                  style={{ marginBottom: "2%" }}
+                  onClick={() => handleWriteNfc(productId)}
+                >
+                  Write to NFC <FaRssSquare />
+                </button>
+              </>
             )}
             <button onClick={() => qrDialogRef?.current?.close()}>Close</button>
           </div>

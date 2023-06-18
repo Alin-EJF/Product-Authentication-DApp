@@ -24,6 +24,11 @@ type ProductData = {
   "Owner/s": string[];
 } | null;
 
+enum ReportType {
+  Provider = "provider-report",
+  Product = "product-report",
+}
+
 export default function IndexPage() {
   const { user } = useContext(UserContext);
   const [productId, setProductId] = useState("");
@@ -31,6 +36,7 @@ export default function IndexPage() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [reportDetails, setReportDetails] = useState("");
   const reportDialogRef = useRef<HTMLDialogElement>(null);
+  const [reportType, setReportType] = useState<ReportType>(ReportType.Provider);
 
   const { web3, contract } = useWeb3(contractAbi, contractAddress);
 
@@ -74,7 +80,8 @@ export default function IndexPage() {
     }
   }, [params.id, web3, contract, navigate]);
 
-  const handleReportProduct = () => {
+  const handleReportProduct = (type: ReportType) => {
+    setReportType(type);
     reportDialogRef?.current?.showModal();
   };
 
@@ -105,7 +112,7 @@ export default function IndexPage() {
 
   const submitReport = async () => {
     if (!product) {
-      toast.error("No product data available to submit report.");
+      toast.error("No product data available to submit a report.");
       return;
     }
 
@@ -113,7 +120,7 @@ export default function IndexPage() {
       await axios.post("/auth/product-report", {
         email: user?.email,
         reportDetails: reportDetails,
-        reportType: "product-report",
+        reportType: reportType,
         productId: product.id,
         productName: product.Name,
         manufacturer: product.Manufacturer,
@@ -219,7 +226,15 @@ export default function IndexPage() {
                   className="submit-button"
                   formMethod="dialog"
                   value="submit"
-                  onClick={handleReportProduct}
+                  onClick={() => handleReportProduct(ReportType.Provider)}
+                >
+                  Report provider
+                </button>
+                <button
+                  className="submit-button"
+                  formMethod="dialog"
+                  value="submit"
+                  onClick={() => handleReportProduct(ReportType.Product)}
                 >
                   Report product
                 </button>
@@ -250,7 +265,11 @@ export default function IndexPage() {
               <FaTimes />
             </button>
 
-            <h2 className="h2provider">Add details about report</h2>
+            <h2 className="h2provider">
+              Add details about{" "}
+              {reportType === ReportType.Provider ? "provider" : "product"}{" "}
+              report
+            </h2>
             <textarea
               style={{ width: "80%", height: "90px" }}
               onChange={(e) => setReportDetails(e.target.value)}
