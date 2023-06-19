@@ -181,7 +181,6 @@ export default function Retailer() {
 
             <input name="price" placeholder="Current price" />
             <input name="certifications" placeholder="Certifications" />
-            <input type="hidden" name="geoLocation" value={geoLocation} />
             <button
               className="submit-button"
               formMethod="dialog"

@@ -9,9 +9,9 @@ contract ProductRegistration {
         string productName;
         string productDescription;
         uint256 dateOfRegistration;
-        string[] locationOfRegistration; // renamed from geoLocations
-        string[] locationsOfUpdates; // added field
-        uint256 dateOfUpdate; // added field
+        string[] locationOfRegistration;
+        string[] locationsOfUpdates;
+        uint256 dateOfUpdate;
         string batch;
         uint256[] prices;
         string[] certifications;

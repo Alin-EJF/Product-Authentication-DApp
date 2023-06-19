@@ -118,7 +118,6 @@ export default function Distributor() {
         >
           <input name="price" placeholder="Current price" />
           <input name="certifications" placeholder="Certifications" />
-          <input type="hidden" name="geoLocation" value={geoLocation} />
           <button className="submit-button" formMethod="dialog" value="submit">
             Update product
           </button>
@@ -148,6 +147,7 @@ export default function Distributor() {
               contract,
               setProductId,
               qrDialogRef,
+              geoLocation,
               user.legal_name,
               user.legal_name,
               "N/A"
@@ -162,7 +162,6 @@ export default function Distributor() {
           <input name="batch" placeholder="Batch  *" />
           <input name="price" placeholder="Product price" />
           <input name="certifications" placeholder="Certifications" />
-          <input type="hidden" name="geoLocation" value={geoLocation} />
           <button className="submit-button" formMethod="dialog" value="submit">
             Submit product
           </button>

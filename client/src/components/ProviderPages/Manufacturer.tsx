@@ -24,6 +24,7 @@ export async function handleRegisterSubmit(
   contract: any,
   setProductId: any,
   qrDialogRef: any,
+  geoLocation: any,
   manufacturer: any,
   distributor: any,
   retailer: any
@@ -37,16 +38,18 @@ export async function handleRegisterSubmit(
     );
     return;
   }
+
   try {
     const productName = formData.get("productName")?.toString() || "";
     const productDescription =
       formData.get("productDescription")?.toString() || "";
-    const geoLocation = formData.get("geoLocation")?.toString() || "";
     const batch = formData.get("batch")?.toString() || "";
     const price = Number(formData.get("price") || 0);
     const certification = formData.get("certifications")?.toString() || "";
 
     const accounts = await web3.eth.getAccounts();
+
+    console.log(geoLocation);
 
     await contract.methods
       .registerProduct(
@@ -97,9 +100,8 @@ export async function handleRegisterSubmit(
 export default function Manufacturer() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const qrDialogRef = useRef<HTMLDialogElement>(null);
-  const geoLocation = useGeolocation();
   const { user } = useContext(UserContext);
-
+  const geoLocation = useGeolocation();
   const [productId, setProductId] = useState(null);
 
   const abi = contractAbi;
@@ -133,9 +135,10 @@ export default function Manufacturer() {
               contract,
               setProductId,
               qrDialogRef,
+              geoLocation,
               user.legal_name,
-              "N/A",
-              "N/A"
+              "",
+              ""
             )
           }
           onClick={(ev) => {
@@ -174,7 +177,6 @@ export default function Manufacturer() {
             <input name="batch" placeholder="Batch  *" />
             <input name="price" placeholder="Product price" />
             <input name="certifications" placeholder="Certifications" />
-            <input type="hidden" name="geoLocation" value={geoLocation} />
             <button
               className="submit-button"
               formMethod="dialog"
