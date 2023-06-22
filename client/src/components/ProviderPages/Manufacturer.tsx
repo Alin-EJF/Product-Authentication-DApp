@@ -87,11 +87,9 @@ export async function handleRegisterSubmit(
       "code" in error &&
       error.code === 4001
     ) {
-      // User denied transaction signature
       console.log("User denied transaction signature");
       toast.error("User denied transaction signature");
     } else {
-      // Handle other errors here
       console.error(error);
     }
   }

@@ -118,8 +118,8 @@ contract ProductRegistration {
             productDescription,
             block.timestamp,
             locationOfRegistrations,
-            new string[](0), // added empty list for locationsOfUpdates
-            0, // added dateOfUpdate initialization
+            new string[](0),
+            0,
             batch,
             prices,
             certifications,
@@ -155,8 +155,8 @@ contract ProductRegistration {
             "Provider is required for update"
         );
 
-        products[id].locationsOfUpdates.push(locationOfUpdate); // new update location
-        products[id].dateOfUpdate = block.timestamp; // new update date
+        products[id].locationsOfUpdates.push(locationOfUpdate);
+        products[id].dateOfUpdate = block.timestamp;
         if (bytes(distributor).length > 0) {
             products[id].distributor = distributor;
         }
@@ -183,12 +183,12 @@ contract ProductRegistration {
     }
 
     //for "Add me as owner" button
-    function addOwner(uint256 id) public {
+    function addOwner(string id) public {
         require(products[id].isRegistered, "Product not found");
         products[id].owners.push(msg.sender);
     }
 
-    function getProduct(uint256 id) public view returns (Product memory) {
+    function getProduct(string id) public view returns (Product memory) {
         require(products[id].isRegistered, "Product not found");
         return products[id];
     }
