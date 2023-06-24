@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-const { NFC, KEY_TYPE_A } = require('nfc-pcsc');
+const { NFC, KEY_TYPE_A , KEY_TYPE_B} = require('nfc-pcsc');
 const ndef = require('ndef');
 
 export const NFCwrite = async (req: Request, res: Response) => {
@@ -23,18 +23,16 @@ export const NFCwrite = async (req: Request, res: Response) => {
     reader.autoProcessing = true;
 
     reader.on('card', async (card: any) => {
-      console.log("Card detected");
+      console.log("Card detected", card);
 
-      const key = 'FFFFFFFFFFFF'; // Key A
-      const keyType = KEY_TYPE_A;
+      const key = 'ffffffffffff'; 
 
 
       try {
-
-        await reader.authenticate(4, keyType, key);
+        await reader.authenticate(4, KEY_TYPE_A, key);
         console.log(`Card authenticated`);
         
-        await reader.write(4, data);
+        await reader.write(4, data, 16);
         console.log(`data written`);
         res.json({message: "NFC tag written successfully"});
       } catch (err) {

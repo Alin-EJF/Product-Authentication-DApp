@@ -73,9 +73,6 @@ export async function handleRegisterSubmit(
         console.log("Product Id is: ", Id);
         setProductId(Id);
         qrDialogRef.current.showModal();
-
-        // Send productId to backend to be written to NFC
-        //writeNfc(productId);
       })
       .on("error", (error: any) => {
         console.error(error);
@@ -106,7 +103,7 @@ export default function Manufacturer() {
   const { web3, contract } = useWeb3(abi, contractAddress);
 
   const handleWriteNfc = (productId: string) => {
-    //writeNfc(productId);
+    writeNfc(productId);
   };
   return (
     <div>
@@ -191,7 +188,9 @@ export default function Manufacturer() {
           onClose={() => qrDialogRef?.current?.close()}
         >
           <div className="form-container">
-            <h2 className="h2provider">Product Id from blockchain</h2>
+            <h2 className="h2provider">
+              Product Id from blockchain: {productId}
+            </h2>
             {productId && (
               <>
                 <QRCode
