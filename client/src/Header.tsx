@@ -45,6 +45,9 @@ export default function Header() {
             </Link>
           )}
 
+          <Link to={"/reviews"} className="header_link">
+            Reviews
+          </Link>
           <Link to={"/about"} className="header_link">
             About
           </Link>

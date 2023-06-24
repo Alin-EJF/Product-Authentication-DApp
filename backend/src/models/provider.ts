@@ -34,3 +34,17 @@ export const findProviderByEmail = async (email: string): Promise<Provider | nul
     return null;
   }
 };
+
+
+export const getRegistrationRequest = async (): Promise<Provider[] | null> => {
+  const query = 'SELECT email, "CIF", trade_register_number, legal_name, phone_number, provider_types FROM provider_users ORDER BY "createdAt" DESC LIMIT 1';
+
+
+  try {
+    const result = await pool.query(query);
+    return result.rows;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};

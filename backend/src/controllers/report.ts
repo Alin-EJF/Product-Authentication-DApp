@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { createReport, getLastReports } from "../models/report";
+import { getRegistrationRequest } from "../models/provider";
 
 export const report = async (req: Request, res: Response): Promise<void> => {
   if (req.method === "POST") {
@@ -20,5 +21,20 @@ export const report = async (req: Request, res: Response): Promise<void> => {
     } else {
       res.status(500).json({ message: "Error fetching reports" });
     }
+  }
+};
+
+
+export const registrationReq = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const providers = await getRegistrationRequest();
+    if (providers) {
+      res.json(providers);
+    } else {
+      res.status(404).json({ message: 'Providers not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
   }
 };

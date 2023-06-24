@@ -1,6 +1,6 @@
 import express from "express";
 import { NFCwrite} from "../controllers/NFC";
-import { report } from "../controllers/report";
+import { registrationReq, report } from "../controllers/report";
 import { register, login, logout, profiletoken } from "../controllers/authController";
 import {validateLoginInput, validateRegistrationInput} from "../middleware/inputValidation";
 
@@ -15,6 +15,7 @@ router.post("/product-report", report);
 router.post("/provider-report", report);
 router.get("/provider-report", report);
 router.get("/product-report", report);
+router.get("/provider-registration-report", registrationReq); 
 
 
 

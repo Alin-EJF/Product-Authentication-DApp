@@ -7,14 +7,18 @@ import "./AdminPage.css";
 export default function AdminPage() {
   const [productReports, setProductReports] = useState([]);
   const [providerReports, setProviderReports] = useState([]);
+  const [providerRegistrationRequests, setProviderRegistrationRequests] =
+    useState([]);
 
   const fetchReports = async (reportType) => {
     try {
       const response = await axios.get(`/auth/${reportType}-report`);
       if (reportType === "product") {
         setProductReports(response.data);
-      } else {
+      } else if (reportType === "provider") {
         setProviderReports(response.data);
+      } else {
+        setProviderRegistrationRequests(response.data);
       }
     } catch (error) {
       toast.error(`Failed to fetch ${reportType} reports`);
@@ -24,11 +28,30 @@ export default function AdminPage() {
   useEffect(() => {
     fetchReports("product");
     fetchReports("provider");
+    fetchReports("provider-registration");
   }, []);
 
   return (
-    <div className="content-container">
+    <div style={{ paddingBottom: "6%" }} className="content-container">
       <h1 className="main-header">Admin panel</h1>
+
+      <h2 className="sub-header">Provider Registration Requests</h2>
+      {providerRegistrationRequests.map((request) => (
+        <div key={request.email} className="report-container">
+          <p>Email: {request.email}</p>
+          <p>CIF: {request.CIF}</p>
+          <p>Trade Register Number: {request.trade_register_number}</p>
+          <p>Legal Name: {request.legal_name}</p>
+          <p>Phone Number: {request.phone_number}</p>
+          <button
+            onClick={() =>
+              console.log(`Accepting registration request: ${request.email}`)
+            }
+          >
+            Accept
+          </button>
+        </div>
+      ))}
 
       <h2 className="sub-header">Product Reports</h2>
       {productReports.map((report) => (
