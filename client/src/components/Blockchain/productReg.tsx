@@ -1,4 +1,4 @@
-export const contractAddress = "0x5760eFb2b035c68D574851133A2722A512058ca8";
+export const contractAddress = "0xa9E516c568239bA0aA458E01C8374c65ae2dC965";
 
 export const contractAbi = [
   {
@@ -17,15 +17,9 @@ export const contractAbi = [
         type: "uint256",
       },
       {
-        indexed: true,
-        internalType: "string",
-        name: "productName",
-        type: "string",
-      },
-      {
         indexed: false,
         internalType: "string",
-        name: "productDescription",
+        name: "productName",
         type: "string",
       },
       {
@@ -33,30 +27,6 @@ export const contractAbi = [
         internalType: "uint256",
         name: "dateOfRegistration",
         type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "string",
-        name: "locationOfRegistration",
-        type: "string",
-      },
-      {
-        indexed: false,
-        internalType: "string",
-        name: "batch",
-        type: "string",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "price",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "string",
-        name: "certification",
-        type: "string",
       },
     ],
     name: "ProductRegistered",

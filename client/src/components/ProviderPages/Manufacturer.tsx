@@ -63,7 +63,7 @@ export async function handleRegisterSubmit(
         distributor,
         retailer
       )
-      .send({ from: accounts[0] })
+      .send({ from: accounts[0], gas: 5000000 })
       .on("receipt", (receipt: any) => {
         console.log("Product registered");
         toast.success("Product registered in the blockchain");

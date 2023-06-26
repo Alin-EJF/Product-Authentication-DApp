@@ -173,7 +173,9 @@ export default function Distributor() {
           onClose={() => qrDialogRef?.current?.close()}
         >
           <div className="form-container">
-            <h2 className="h2provider">Product Id from blockchain</h2>
+            <h2 className="h2provider">
+              Product Id from blockchain: {productId}
+            </h2>
             {productId && (
               <>
                 <QRCode

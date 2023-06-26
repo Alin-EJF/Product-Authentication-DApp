@@ -37,18 +37,13 @@ contract ProductRegistration {
 
     event ProductRegistered(
         uint256 indexed id,
-        string indexed productName,
-        string productDescription,
-        uint256 dateOfRegistration,
-        string locationOfRegistration,
-        string batch,
-        uint256 price,
-        string certification
+        string productName,
+        uint256 dateOfRegistration
     );
 
     constructor() public {
         registerProduct(
-            "Product1",
+            "First product ever",
             "Product Description 1",
             "Location1",
             "Batch1",
@@ -58,18 +53,13 @@ contract ProductRegistration {
             "Distributor1",
             "Retailer1"
         );
+    }
 
-        registerProduct(
-            "Product2",
-            "Product Description 2",
-            "Location2",
-            "Batch2",
-            200,
-            "certification2",
-            "Manufacturer2",
-            "Distributor2",
-            "Retailer2"
-        );
+    function generateRandomId() private view returns (uint256) {
+        uint256 randomNumber = uint256(
+            keccak256(abi.encodePacked(block.timestamp, block.difficulty))
+        ) % 1e12;
+        return randomNumber;
     }
 
     function registerProduct(
@@ -98,7 +88,10 @@ contract ProductRegistration {
         );
         require(bytes(batch).length > 0, "Batch is required");
 
+        uint256 productId = generateRandomId();
+
         productCount++;
+        if (productCount == 1) productId = 1;
 
         string[] memory locationOfRegistrations = new string[](1);
         locationOfRegistrations[0] = locationOfRegistration;
@@ -112,8 +105,8 @@ contract ProductRegistration {
         address[] memory owners = new address[](1);
         owners[0] = msg.sender;
 
-        products[productCount] = Product(
-            productCount,
+        products[productId] = Product(
+            productId,
             productName,
             productDescription,
             block.timestamp,
@@ -129,16 +122,7 @@ contract ProductRegistration {
             owners,
             true
         );
-        emit ProductRegistered(
-            productCount,
-            productName,
-            productDescription,
-            block.timestamp,
-            locationOfRegistration,
-            batch,
-            price,
-            certification
-        );
+        emit ProductRegistered(productId, productName, block.timestamp);
     }
 
     function updateProduct(
@@ -183,12 +167,12 @@ contract ProductRegistration {
     }
 
     //for "Add me as owner" button
-    function addOwner(string id) public {
+    function addOwner(uint256 id) public {
         require(products[id].isRegistered, "Product not found");
         products[id].owners.push(msg.sender);
     }
 
-    function getProduct(string id) public view returns (Product memory) {
+    function getProduct(uint256 id) public view returns (Product memory) {
         require(products[id].isRegistered, "Product not found");
         return products[id];
     }
