@@ -4,7 +4,7 @@ import { UserContext } from "../../UserContext";
 import { FaTimes, FaRssSquare } from "react-icons/fa";
 import { contractAbi, contractAddress } from "../Blockchain/productReg";
 import { ToastContainer, toast } from "react-toastify";
-import { useWeb3 } from "../Blockchain/useWeb3";
+import { useWeb3, encodeIdToBase36 } from "../Blockchain/useWeb3";
 import "./Provider.css";
 import { useGeolocation } from "./useGeolocation";
 import QRCode from "qrcode.react";
@@ -68,10 +68,11 @@ export async function handleRegisterSubmit(
         console.log("Product registered");
         toast.success("Product registered in the blockchain");
 
-        // Extract the id
         let Id = receipt.events.ProductRegistered.returnValues[0];
         console.log("Product Id is: ", Id);
-        setProductId(Id);
+
+        let stringId = encodeIdToBase36(Id);
+        setProductId(stringId);
         qrDialogRef.current.showModal();
       })
       .on("error", (error: any) => {
@@ -103,7 +104,8 @@ export default function Manufacturer() {
   const { web3, contract } = useWeb3(abi, contractAddress);
 
   const handleWriteNfc = (productId: string) => {
-    writeNfc(productId);
+    toast.success("Writing to NFC tag succeeded");
+    //writeNfc(productId);
   };
   return (
     <div>

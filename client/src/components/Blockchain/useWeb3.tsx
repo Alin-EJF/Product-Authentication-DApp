@@ -37,3 +37,14 @@ export const useWeb3 = (abi: any, contractAddress: string) => {
 
   return { web3, contract };
 };
+
+export function encodeIdToBase36(Id: any) {
+  let stringId = parseInt(Id).toString(36).toUpperCase();
+  stringId = stringId.padStart(12, "Z");
+  return stringId;
+}
+
+export function decodeStringId(stringId: string) {
+  stringId = stringId.replace(/^Z+/, "");
+  return parseInt(stringId, 36);
+}

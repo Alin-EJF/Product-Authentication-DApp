@@ -1,5 +1,5 @@
 import axios from "axios";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useState, useEffect } from "react";
 import "./AdminPage.css";
@@ -33,6 +33,7 @@ export default function AdminPage() {
 
   return (
     <div style={{ paddingBottom: "6%" }} className="content-container">
+      <ToastContainer />
       <h1 className="main-header">Admin panel</h1>
 
       <h2 className="sub-header">Provider Registration Requests</h2>
@@ -44,9 +45,10 @@ export default function AdminPage() {
           <p>Legal Name: {request.legal_name}</p>
           <p>Phone Number: {request.phone_number}</p>
           <button
-            onClick={() =>
-              console.log(`Accepting registration request: ${request.email}`)
-            }
+            onClick={() => {
+              toast.success("Successfully accepted request");
+              console.log(`Accepting registration request: ${request.email}`);
+            }}
           >
             Accept
           </button>

@@ -3,7 +3,11 @@ import { UserContext } from "../UserContext";
 import { FaSearch, FaTimes, FaQrcode } from "react-icons/fa";
 import { contractAbi, contractAddress } from "./Blockchain/productReg";
 import { ToastContainer, toast } from "react-toastify";
-import { useWeb3 } from "./Blockchain/useWeb3";
+import {
+  useWeb3,
+  encodeIdToBase36,
+  decodeStringId,
+} from "./Blockchain/useWeb3";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -45,10 +49,12 @@ export default function IndexPage() {
 
   const fetchProductData = async (id: string) => {
     try {
-      const product = await contract.methods.getProduct(id).call();
+      const product = await contract.methods
+        .getProduct(decodeStringId(id))
+        .call();
 
       const productMapped = {
-        id: product[0],
+        id: encodeIdToBase36(product[0]),
         Name: product[1],
         Description: product[2],
         "Date of registration": new Date(product[3] * 1000).toLocaleString(),
@@ -103,7 +109,9 @@ export default function IndexPage() {
     try {
       const accounts = await web3.eth.getAccounts();
 
-      await contract.methods.addOwner(productId).send({ from: accounts[0] });
+      await contract.methods
+        .addOwner(decodeStringId(productId))
+        .send({ from: accounts[0] });
       toast.success("Successfully added as an owner");
     } catch (error) {
       toast.error("An error occurred while adding as an owner");

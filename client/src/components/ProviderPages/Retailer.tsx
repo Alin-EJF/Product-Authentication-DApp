@@ -3,7 +3,7 @@ import { UserContext } from "../../UserContext";
 import { FaSearch, FaTimes, FaQrcode } from "react-icons/fa";
 import { contractAbi, contractAddress } from "../Blockchain/productReg";
 import { ToastContainer, toast } from "react-toastify";
-import { useWeb3 } from "../Blockchain/useWeb3";
+import { useWeb3, decodeStringId } from "../Blockchain/useWeb3";
 import "./Provider.css";
 import { useGeolocation } from "./useGeolocation";
 
@@ -24,7 +24,9 @@ export async function handleClick(
   }
 
   try {
-    const product = await contract.methods.getProduct(productId).call();
+    const product = await contract.methods
+      .getProduct(decodeStringId(productId))
+      .call();
     if (product != null) {
       toast.success("Product Found in the blockchain");
       dialogRef?.current?.showModal();
@@ -59,6 +61,7 @@ export async function handleUpdate(
     const certification = formData.get("certifications")?.toString() || "";
 
     const accounts = await web3.eth.getAccounts();
+    productId = decodeStringId(productId);
 
     await contract.methods
       .updateProduct(

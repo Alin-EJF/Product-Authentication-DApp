@@ -3,7 +3,7 @@ import { UserContext } from "../../UserContext";
 import { FaSearch, FaTimes, FaQrcode, FaRssSquare } from "react-icons/fa";
 import { contractAbi, contractAddress } from "../Blockchain/productReg";
 import { ToastContainer } from "react-toastify";
-import { useWeb3 } from "../Blockchain/useWeb3";
+import { useWeb3, decodeStringId } from "../Blockchain/useWeb3";
 import { handleRegisterSubmit, writeNfc } from "./Manufacturer";
 import { handleClick, handleUpdate } from "./Retailer";
 import "./Provider.css";
